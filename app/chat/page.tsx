@@ -7,7 +7,7 @@ async function Chat() {
     headers: await headers(),
   });
   return (
-    <div className="flex flex-col gap-2 justify-center items-center h-full">
+    <div className="flex flex-col gap-2 justify-center items-center w-full h-full">
       <h1 className="text-xl">Welcome {session?.user.name}</h1>
       <p>Email: {session?.user.email}</p>
       <SignOutButton />
