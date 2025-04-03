@@ -2,11 +2,17 @@
 
 import { signUp } from "@/actions/auth";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -16,6 +22,7 @@ import { Input } from "@/components/ui/input";
 import { signUpSchema } from "@/lib/zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
+import Link from "next/link";
 import { useActionState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -39,16 +46,21 @@ function SignUpForm() {
     },
   });
   useEffect(() => {
-    toast.error(error?.message);
+    if (error?.message) {
+      toast.error(error?.message);
+    }
   }, [error?.message]);
   return (
     <Card className="min-w-sm">
       <CardHeader>
-        <CardTitle className="text-center">Sign Up</CardTitle>
+        <CardTitle className="text-xl text-center">Sign Up</CardTitle>
+        <CardDescription className="text-center">
+          Sign Up to Create your account
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form action={action} className="space-y-4">
+          <form action={action} className="space-y-6">
             <FormField
               name="name"
               control={form.control}
@@ -58,10 +70,11 @@ function SignUpForm() {
                   <FormControl>
                     <Input placeholder="" {...field} />
                   </FormControl>
-                  <FormDescription>Your Name</FormDescription>
                   <FormMessage />
                   {error?.errors?.name && (
-                    <span className="text-red-700">{error?.errors.name}</span>
+                    <span className="text-sm text-red-700">
+                      {error?.errors.name}
+                    </span>
                   )}
                 </FormItem>
               )}
@@ -75,10 +88,11 @@ function SignUpForm() {
                   <FormControl>
                     <Input placeholder="" {...field} />
                   </FormControl>
-                  <FormDescription>Your Email Address</FormDescription>
                   <FormMessage />
                   {error?.errors?.email && (
-                    <span className="text-red-700">{error?.errors.email}</span>
+                    <span className="text-sm text-red-700">
+                      {error?.errors.email}
+                    </span>
                   )}
                 </FormItem>
               )}
@@ -92,10 +106,9 @@ function SignUpForm() {
                   <FormControl>
                     <Input type="password" placeholder="" {...field} />
                   </FormControl>
-                  <FormDescription>Your Password</FormDescription>
                   <FormMessage />
                   {error?.errors?.password && (
-                    <span className="text-red-700">
+                    <span className="text-sm text-red-700">
                       {error?.errors.password}
                     </span>
                   )}
@@ -111,15 +124,21 @@ function SignUpForm() {
               {isPending ? (
                 <div className="flex gap-1">
                   <Loader2 className="animate-spin" />
-                  <span>Submitting</span>
+                  <span>Please Wait</span>
                 </div>
               ) : (
-                <span>Submit</span>
+                <span>Sign Up</span>
               )}
             </Button>
           </form>
         </Form>
       </CardContent>
+      <CardFooter className="flex justify-center items-center w-full">
+        <span className="text-sm">Already have an account?</span>
+        <Button variant="link" size="sm" asChild>
+          <Link href="/signin">Sign In</Link>
+        </Button>
+      </CardFooter>
     </Card>
   );
 }
