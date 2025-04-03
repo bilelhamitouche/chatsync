@@ -53,6 +53,9 @@ export async function signUp(_prevState: State, formData: FormData) {
         password: validationResult.password,
       },
     });
+    return {
+      message: "Signed Up Successfully",
+    };
   } catch (err) {
     if (err instanceof ZodError) {
       return {
