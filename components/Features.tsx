@@ -20,13 +20,13 @@ function Features() {
     },
   ];
   return (
-    <section className="container py-28 px-8 mx-auto space-y-2 text-center sm:px-16">
+    <section className="container py-28 px-8 mx-auto space-y-2 text-center">
       <h1 className="text-4xl font-bold">Why Choose ChatSync?</h1>
       <p className="text-lg text-gray-500">
         Our chat platform is designed to make communication effortless and
         enjoyable.
       </p>
-      <div className="grid grid-cols-1 gap-8 place-content-center mt-16 sm:grid-cols-2 md:grid-cols-3">
+      <div className="grid grid-cols-1 gap-8 place-content-center mt-16 md:grid-cols-2 lg:grid-cols-3">
         {features.map((feature, index) => (
           <FeatureCard
             key={index}
