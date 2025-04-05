@@ -17,11 +17,11 @@ import { useState } from "react";
 function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   return (
-    <header className="flex sticky z-10 justify-between items-center p-4 border-b border-b-gray-200 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <h1 className="flex items-center space-x-1">
+    <header className="flex fixed z-10 justify-between items-center p-4 w-full bg-white border-b border-b-gray-200">
+      <Link href="/" className="flex items-center space-x-1">
         <MessageSquare className="text-primary" />
         <span className="text-xl font-bold text-primary">ChatSync</span>
-      </h1>
+      </Link>
       <NavigationMenu className="hidden sm:block">
         <NavigationMenuList>
           <NavigationMenuItem>
