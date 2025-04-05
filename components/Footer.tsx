@@ -4,7 +4,7 @@ import { Button } from "./ui/button";
 
 function Footer() {
   return (
-    <footer className="flex justify-between p-4 text-sm">
+    <footer className="flex justify-between p-4 text-sm bg-primary-foreground">
       <div className="flex flex-col justify-between">
         <div className="flex gap-4 items-center">
           <Link href="https://instagram.com/chatsync">
