@@ -1,4 +1,6 @@
-import { MessageSquare } from "lucide-react";
+"use client";
+
+import { Menu, MessageSquare } from "lucide-react";
 import { Button } from "./ui/button";
 import Link from "next/link";
 import {
@@ -10,8 +12,10 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "./ui/navigation-menu";
+import { useState } from "react";
 
 function Navbar() {
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   return (
     <header className="flex sticky z-10 justify-between items-center p-4 border-b border-b-gray-200 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <h1 className="flex items-center space-x-1">
@@ -51,6 +55,14 @@ function Navbar() {
           </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>
+      <Button
+        variant="outline"
+        className="block sm:hidden"
+        size="sm"
+        onClick={() => setIsMenuOpen(!isMenuOpen)}
+      >
+        <Menu />
+      </Button>
       <div className="hidden space-x-2 sm:flex">
         <Button variant="ghost" asChild>
           <Link href="/signin">Sign In</Link>
