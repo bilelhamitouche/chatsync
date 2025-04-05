@@ -13,13 +13,13 @@ function Hero() {
         messaging with our lightning-fast, secure chat platform.
       </p>
       <div className="space-x-4">
-        <Button size="lg" className="py-4 px-10" asChild>
+        <Button size="lg" asChild>
           <Link href="/signup">
             <span>Get Started</span>
             <ArrowRight className="-ml-1" />
           </Link>
         </Button>
-        <Button variant="outline" size="lg" className="py-4 px-10" asChild>
+        <Button variant="outline" size="lg" className="py-4 px-6" asChild>
           <Link href="/signup">Learn More</Link>
         </Button>
       </div>
