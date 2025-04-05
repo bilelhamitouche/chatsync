@@ -8,7 +8,7 @@ interface FeatureCardProps {
 
 function FeatureCard({ icon, title, text }: FeatureCardProps) {
   return (
-    <Card className="flex transition-shadow duration-200 hover:drop-shadow-lg">
+    <Card className="transition-shadow duration-200 hover:drop-shadow-lg">
       <CardHeader>
         <div className="mx-auto">{icon}</div>
         <CardTitle className="text-2xl font-bold text-center">
