@@ -35,7 +35,7 @@ function About() {
         We're on a mission to revolutionize digital communication by providing
         the most secure, efficient, and user-friendly messaging platform.
       </p>
-      <div className="flex gap-8 mt-16">
+      <div className="flex flex-col gap-8 mt-16 lg:flex-row">
         <div className="flex flex-col gap-4 text-left">
           <h3 className="text-2xl font-bold md:max-w-1/2">Our Story</h3>
           <p className="text-base text-gray-500">
@@ -54,7 +54,7 @@ function About() {
           alt="team image"
           width="550"
           height="400"
-          className="rounded-lg"
+          className="w-full rounded-lg lg:w-fit"
         />
       </div>
       <div className="grid grid-cols-1 gap-8 place-content-center py-24 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
