@@ -1,23 +1,15 @@
 "use client";
 
-import { authClient } from "@/lib/auth-client";
 import { Button } from "./ui/button";
-import { redirect } from "next/navigation";
+import { signOutAction } from "@/actions/auth";
 
-function SignOutButton() {
+export function SignOutButton() {
   return (
-    <Button
-      variant="destructive"
-      onClick={() =>
-        authClient.signOut({
-          fetchOptions: {
-            onSuccess: () => redirect("/signin"),
-          },
-        })
-      }
-    >
-      Sign Out
-    </Button>
+    <form action={signOutAction}>
+      <Button variant="destructive" type="submit">
+        Sign Out
+      </Button>
+    </form>
   );
 }
 
