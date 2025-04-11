@@ -20,7 +20,7 @@ function Hero() {
           </Link>
         </Button>
         <Button variant="outline" size="lg" className="py-4 px-6" asChild>
-          <Link href="/signup">Learn More</Link>
+          <Link href="/about">Learn More</Link>
         </Button>
       </div>
     </section>
