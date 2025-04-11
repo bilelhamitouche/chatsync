@@ -1,6 +1,6 @@
 "use client";
 
-import { signUp } from "@/actions/auth";
+import { signUpAction } from "@/actions/auth";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -23,20 +23,15 @@ import { signUpSchema } from "@/lib/zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
-import { useActionState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-
-const initialState = {
-  errors: {
-    email: "",
-    password: "",
-  },
-  message: "",
-};
+import { z } from "zod";
 
 function SignUpForm() {
-  const [error, action, isPending] = useActionState(signUp, initialState);
+  const router = useRouter();
+  const [isPending, setIsPending] = useState<boolean>(false);
   const form = useForm({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
@@ -45,11 +40,6 @@ function SignUpForm() {
       password: "",
     },
   });
-  useEffect(() => {
-    if (error?.message) {
-      toast.error(error?.message);
-    }
-  }, [error?.message]);
   return (
     <Card className="min-w-sm">
       <CardHeader>
@@ -60,7 +50,30 @@ function SignUpForm() {
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form action={action} className="space-y-6">
+          <form
+            onSubmit={form.handleSubmit(
+              async (data: z.infer<typeof signUpSchema>) => {
+                setIsPending(true);
+                const formData = new FormData();
+                formData.append("name", data.name);
+                formData.append("email", data.email);
+                formData.append("password", data.password);
+                try {
+                  const result = await signUpAction(formData);
+                  result?.message && toast.error(result.message);
+                  if (!result?.message && !result?.errors) {
+                    toast.success("Signed Up Successfully");
+                    router.push("/signin");
+                  }
+                } catch (err) {
+                  console.log(err);
+                } finally {
+                  setIsPending(false);
+                }
+              },
+            )}
+            className="space-y-6"
+          >
             <FormField
               name="name"
               control={form.control}
@@ -71,11 +84,6 @@ function SignUpForm() {
                     <Input placeholder="" {...field} />
                   </FormControl>
                   <FormMessage />
-                  {error?.errors?.name && (
-                    <span className="text-sm text-red-700">
-                      {error?.errors.name}
-                    </span>
-                  )}
                 </FormItem>
               )}
             />
@@ -89,11 +97,6 @@ function SignUpForm() {
                     <Input placeholder="" {...field} />
                   </FormControl>
                   <FormMessage />
-                  {error?.errors?.email && (
-                    <span className="text-sm text-red-700">
-                      {error?.errors.email}
-                    </span>
-                  )}
                 </FormItem>
               )}
             />
@@ -107,11 +110,6 @@ function SignUpForm() {
                     <Input type="password" placeholder="" {...field} />
                   </FormControl>
                   <FormMessage />
-                  {error?.errors?.password && (
-                    <span className="text-sm text-red-700">
-                      {error?.errors.password}
-                    </span>
-                  )}
                 </FormItem>
               )}
             />
