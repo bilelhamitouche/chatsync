@@ -23,6 +23,7 @@ import { passwordChangeSchema } from "../lib/zod";
 import { Button } from "@/components/ui/button";
 import { changePasswordAction } from "../actions/password";
 import { useState } from "react";
+import { toast } from "sonner";
 
 function Password() {
   const [isPending, setIsPending] = useState<boolean>(false);
@@ -57,6 +58,9 @@ function Password() {
                 );
                 try {
                   const result = await changePasswordAction(formData);
+                  result?.message && toast.error(result.message);
+                  if (!result?.errors && !result?.message)
+                    toast.success("Password changed successfully");
                 } catch (err) {
                 } finally {
                   setIsPending(false);
