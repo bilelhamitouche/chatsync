@@ -3,6 +3,8 @@
 import { auth } from "@/lib/auth";
 import { signInSchema, signUpSchema } from "@/lib/zod";
 import { APIError } from "better-auth/api";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 
 export async function signInAction(formData: FormData) {
   const email = formData.get("email") as string;
@@ -51,6 +53,28 @@ export async function signUpAction(formData: FormData) {
         password: signUpSchemaValidation.data.password,
       },
     });
+  } catch (err) {
+    if (err instanceof APIError) {
+      return {
+        message: err.message,
+      };
+    }
+  }
+}
+
+export async function signOutAction() {
+  await auth.api.signOut({
+    headers: await headers(),
+  });
+  redirect("/signin");
+}
+
+export async function getSessionInfo() {
+  try {
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
+    return session;
   } catch (err) {
     if (err instanceof APIError) {
       return {
