@@ -70,16 +70,8 @@ export async function signOutAction() {
 }
 
 export async function getSessionInfo() {
-  try {
-    const session = await auth.api.getSession({
-      headers: await headers(),
-    });
-    return session;
-  } catch (err) {
-    if (err instanceof APIError) {
-      return {
-        message: err.message,
-      };
-    }
-  }
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  return session;
 }
