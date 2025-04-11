@@ -1,6 +1,6 @@
 "use client";
 
-import { signIn } from "@/actions/auth";
+import { signInAction } from "@/actions/auth";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -23,27 +23,15 @@ import { signInSchema } from "@/lib/zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
-import { FormEvent, useActionState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-const initialState: {
-  errors?: {
-    email: string;
-    password: string;
-  };
-  message?: string;
-} = {
-  errors: {
-    email: "",
-    password: "",
-  },
-  message: "",
-};
-
 function SignInForm() {
-  const [error, action, isPending] = useActionState(signIn, initialState);
+  const router = useRouter();
+  const [isPending, setIsPending] = useState<boolean>(false);
   const form = useForm<z.infer<typeof signInSchema>>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
@@ -51,12 +39,6 @@ function SignInForm() {
       password: "",
     },
   });
-  const formRef = useRef<HTMLFormElement>(null);
-  useEffect(() => {
-    if (error?.message) {
-      toast.error(error?.message);
-    }
-  }, [error?.message]);
   return (
     <Card className="min-w-sm">
       <CardHeader>
@@ -68,12 +50,27 @@ function SignInForm() {
       <CardContent>
         <Form {...form}>
           <form
-            ref={formRef}
-            action={action}
             className="space-y-2"
-            onSubmit={form.handleSubmit(() => {
-              formRef.current?.submit();
-            })}
+            onSubmit={form.handleSubmit(
+              async (data: z.infer<typeof signInSchema>) => {
+                setIsPending(true);
+                const formData = new FormData();
+                formData.append("email", data.email);
+                formData.append("password", data.password);
+                try {
+                  const result = await signInAction(formData);
+                  result?.message && toast.error(result.message);
+                  if (!result?.errors && !result?.message) {
+                    toast.success("Signed In Successfully");
+                    router.push("/chat");
+                  }
+                } catch (err) {
+                  console.log(err);
+                } finally {
+                  setIsPending(false);
+                }
+              },
+            )}
           >
             <FormField
               control={form.control}
@@ -85,11 +82,6 @@ function SignInForm() {
                     <Input placeholder="" {...field} />
                   </FormControl>
                   <FormMessage />
-                  {error?.errors && (
-                    <span className="text-sm text-red-700">
-                      {error.errors.email}
-                    </span>
-                  )}
                 </FormItem>
               )}
             />
@@ -113,11 +105,6 @@ function SignInForm() {
                     <Input placeholder="" type="password" {...field} />
                   </FormControl>
                   <FormMessage />
-                  {error?.errors && (
-                    <span className="text-red-700">
-                      {error.errors.password}
-                    </span>
-                  )}
                 </FormItem>
               )}
             />
