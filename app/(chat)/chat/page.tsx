@@ -1,19 +1,16 @@
-import { getSessionInfo } from "@/actions/auth";
-import SignOutButton from "@/components/SignOutButton";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
+import CustomSidebarTrigger from "@/components/custom-sidebar-trigger";
 
 async function Chat() {
-  const session = await getSessionInfo();
   return (
-    <div className="flex flex-col gap-2 justify-center items-center h-full">
-      <h1 className="text-xl font-bold">Chat page</h1>
-      <p>{session?.user.name}</p>
-      <p>{session?.user.email}</p>
-      <Button variant="link" size="sm" asChild>
-        <Link href="/settings/account">Settings</Link>
-      </Button>
-      <SignOutButton />
+    <div className="flex flex-col w-full h-screen">
+      <header className="p-4 shadow-sm shadow-b">
+        <CustomSidebarTrigger />
+      </header>
+      <div className="flex justify-center items-center h-full">
+        <p className="text-lg text-gray-500">
+          Select a chat or create a new one to start messaging.
+        </p>
+      </div>
     </div>
   );
 }
