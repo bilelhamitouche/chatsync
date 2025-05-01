@@ -60,7 +60,7 @@ function SignUpForm() {
                 formData.append("password", data.password);
                 try {
                   const result = await signUpAction(formData);
-                  result?.message && toast.error(result.message);
+                  if (result?.message) toast.error(result.message);
                   if (!result?.message && !result?.errors) {
                     toast.success("Signed Up Successfully");
                     router.push("/signin");

@@ -59,7 +59,7 @@ function SignInForm() {
                 formData.append("password", data.password);
                 try {
                   const result = await signInAction(formData);
-                  result?.message && toast.error(result.message);
+                  if (result?.message) toast.error(result.message);
                   if (!result?.errors && !result?.message) {
                     toast.success("Signed In Successfully");
                     router.push("/chat");
