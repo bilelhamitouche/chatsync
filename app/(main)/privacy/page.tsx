@@ -36,8 +36,9 @@ function PrivacyPolicy() {
           <h3 className="text-2xl font-semibold">3. Data Security</h3>
           <p>
             You agree to use NovaChat only for lawful purposes and in a way that
-            does not infringe the rights of, restrict or inhibit anyone else's
-            use and enjoyment of the service. Prohibited behavior includes:
+            does not infringe the rights of, restrict or inhibit anyone
+            else&apos;s use and enjoyment of the service. Prohibited behavior
+            includes:
           </p>
           <ul className="pl-6 list-disc">
             <li>End-to-end encryption for all messages</li>

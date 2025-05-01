@@ -24,6 +24,7 @@ import { Button } from "@/components/ui/button";
 import { changePasswordAction } from "../actions/password";
 import { useState } from "react";
 import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
 
 function Password() {
   const [isPending, setIsPending] = useState<boolean>(false);
@@ -40,7 +41,7 @@ function Password() {
       <CardHeader>
         <CardTitle>Password</CardTitle>
         <CardDescription>
-          Change your password here. After saving you'll be logged out.
+          Change your password here. After saving you&apos;ll be logged out.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -58,10 +59,11 @@ function Password() {
                 );
                 try {
                   const result = await changePasswordAction(formData);
-                  result?.message && toast.error(result.message);
+                  if (result?.message) toast.error(result.message);
                   if (!result?.errors && !result?.message)
                     toast.success("Password changed successfully");
                 } catch (err) {
+                  console.log(err);
                 } finally {
                   setIsPending(false);
                 }
@@ -108,7 +110,16 @@ function Password() {
                 </FormItem>
               )}
             />
-            <Button type="submit">Change Password</Button>
+            <Button type="submit" disabled={isPending}>
+              {isPending ? (
+                <div>
+                  <Loader2 className="animate-spin" />
+                  <span>Please wait</span>
+                </div>
+              ) : (
+                <span>Change Password</span>
+              )}
+            </Button>
           </form>
         </Form>
       </CardContent>

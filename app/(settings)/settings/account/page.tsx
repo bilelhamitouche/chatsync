@@ -24,6 +24,7 @@ import { accountChangeAction } from "../actions/account";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
 
 function Account() {
   const [isPending, setIsPending] = useState<boolean>(false);
@@ -39,7 +40,7 @@ function Account() {
       <CardHeader>
         <CardTitle>Account Settings</CardTitle>
         <CardDescription>
-          Make changes to your account here. Click save when you're done.
+          Make changes to your account here. Click save when you&apos;re done.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -53,10 +54,11 @@ function Account() {
                 formData.append("email", data.email);
                 try {
                   const result = await accountChangeAction(formData);
-                  result?.message && toast.error(result.message);
+                  if (result?.message) toast.error(result.message);
                   if (!result?.errors && !result?.message)
                     toast.success("Account settings changed successfully");
                 } catch (err) {
+                  console.log(err);
                 } finally {
                   setIsPending(false);
                 }
@@ -90,7 +92,16 @@ function Account() {
                 </FormItem>
               )}
             />
-            <Button type="submit">Save changes</Button>
+            <Button type="submit" disabled={isPending}>
+              {isPending ? (
+                <div>
+                  <Loader2 className="animate-spin" />
+                  <span>Please wait</span>
+                </div>
+              ) : (
+                <span>Save changes</span>
+              )}
+            </Button>
           </form>
         </Form>
       </CardContent>

@@ -34,8 +34,8 @@ function Contact() {
       <div className="space-y-4">
         <h2 className="text-4xl font-bold">Contact Us</h2>
         <p className="mx-auto max-w-2xl text-xl text-gray-500">
-          Have questions? We're here to help. Reach out to our team through any
-          of the channels below.
+          Have questions? We&apos;re here to help. Reach out to our team through
+          any of the channels below.
         </p>
       </div>
       <div className="grid grid-cols-1 gap-8 mt-16 sm:grid-cols-2 lg:grid-cols-3">

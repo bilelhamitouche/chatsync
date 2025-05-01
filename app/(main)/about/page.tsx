@@ -32,8 +32,9 @@ function About() {
     <section className="container py-28 px-8 mx-auto space-y-4 max-w-6xl text-center">
       <h2 className="text-4xl font-bold">About ChatSync</h2>
       <p className="mx-auto max-w-2xl text-xl text-gray-500">
-        We're on a mission to revolutionize digital communication by providing
-        the most secure, efficient, and user-friendly messaging platform.
+        We&apos;re on a mission to revolutionize digital communication by
+        providing the most secure, efficient, and user-friendly messaging
+        platform.
       </p>
       <div className="flex flex-col gap-8 mt-16 lg:flex-row">
         <div className="flex flex-col gap-4 text-left">
@@ -70,8 +71,8 @@ function About() {
       <div className="container flex flex-col gap-4 justify-center items-center mx-auto max-w-2xl">
         <h3 className="text-2xl font-bold">Join Our Team</h3>
         <p className="text-gray-500">
-          We're always looking for talented individuals who share our passion
-          for innovation and privacy-focused communication.
+          We&apos;re always looking for talented individuals who share our
+          passion for innovation and privacy-focused communication.
         </p>
         <Button size="lg" asChild>
           <Link href="https://emploitic.com" target="_blank">
