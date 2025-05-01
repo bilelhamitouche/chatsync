@@ -58,4 +58,41 @@ export const verification = pgTable("verification", {
   updatedAt: timestamp("updated_at"),
 });
 
+export const chat = pgTable("chat", {
+  id: text("id")
+    .primaryKey()
+    .notNull()
+    .$defaultFn(() => crypto.randomUUID()),
+  name: text("name").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+export const chatMember = pgTable("chat_member", {
+  id: text("id")
+    .primaryKey()
+    .notNull()
+    .$defaultFn(() => crypto.randomUUID()),
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  chatId: text("chat_id")
+    .notNull()
+    .references(() => chat.id, { onDelete: "cascade" }),
+});
+
+export const message = pgTable("message", {
+  id: text("id")
+    .primaryKey()
+    .notNull()
+    .$defaultFn(() => crypto.randomUUID()),
+  content: text("content").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  senderId: text("sender_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  chatId: text("chat_id")
+    .notNull()
+    .references(() => chat.id),
+});
+
 export const schema = { user, session, account, verification };
