@@ -1,11 +1,17 @@
 "use server";
 
 import { createChat } from "@/lib/queries";
-import { revalidatePath } from "next/cache";
+import { revalidateTag } from "next/cache";
+import { getUserInfo } from "./auth";
 
 export async function createChatAction(formData: FormData) {
   const name = formData.get("name") as string;
-  const members = JSON.parse(formData.get("members") as string);
-  await createChat(name, members);
-  revalidatePath("/chat");
+  const members = formData.get("members") as string;
+  const user = await getUserInfo();
+  if (members) {
+    const newMembers = JSON.parse(members);
+    newMembers.push(user?.id);
+    await createChat(name, newMembers);
+  }
+  revalidateTag("chats");
 }
