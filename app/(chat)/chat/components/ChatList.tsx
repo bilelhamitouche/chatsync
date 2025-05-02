@@ -23,7 +23,6 @@ export default function ChatList() {
     queryFn: getChats,
     enabled: isAuthenticated,
   });
-  console.log(userChats);
   if (isError) toast.error("Cannot fetch chats");
   if (userChats?.chats != null)
     return (
