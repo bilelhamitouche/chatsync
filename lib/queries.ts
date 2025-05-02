@@ -1,6 +1,6 @@
-import { isAuthenticated } from "@/actions/auth";
+import { getUserInfo, isAuthenticated } from "@/actions/auth";
 import { chat, chatMember, db, message, user } from "./drizzle";
-import { DrizzleError, eq } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 
 export async function getUsers() {
   await isAuthenticated();
@@ -8,9 +8,7 @@ export async function getUsers() {
     const users = await db.select().from(user);
     return users;
   } catch (err) {
-    if (err instanceof DrizzleError) {
-      return err.message;
-    }
+    throw new Error("Database Error");
   }
 }
 
@@ -24,9 +22,24 @@ export async function getChatMessages(chatId: string) {
       .where(eq(chatMember.chatId, chatId));
     return messages;
   } catch (err) {
-    if (err instanceof DrizzleError) {
-      return err.message;
-    }
+    throw new Error("Database Error");
+  }
+}
+
+export async function getChats() {
+  const userInfo = await getUserInfo();
+  await isAuthenticated();
+  try {
+    const chats = await db
+      .select()
+      .from(chat)
+      .leftJoin(chatMember, eq(chat.id, chatMember.chatId))
+      .leftJoin(user, eq(chatMember.userId, user.id))
+      .where(eq(chatMember.userId, userInfo?.id as string));
+    console.log(chats);
+    return chats;
+  } catch (err) {
+    throw new Error("Database Error");
   }
 }
 
@@ -42,9 +55,7 @@ export async function createMessage(
       .values({ content, senderId, chatId });
     return newMessage;
   } catch (err) {
-    if (err instanceof DrizzleError) {
-      return err.message;
-    }
+    throw new Error("Database Error");
   }
 }
 
@@ -60,8 +71,6 @@ export async function createChat(name: string, memberIds: string[]) {
       await tx.insert(chatMember).values(memberData);
     });
   } catch (err) {
-    if (err instanceof DrizzleError) {
-      return err.message;
-    }
+    throw new Error("Database Error");
   }
 }
