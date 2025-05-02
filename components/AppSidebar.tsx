@@ -37,32 +37,42 @@ import { Label } from "./ui/label";
 import { Option } from "@/components/ui/multiple-selector";
 import { authClient } from "@/lib/auth-client";
 import { useEffect, useRef, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { getUsers } from "@/lib/utils";
+import { Skeleton } from "./ui/skeleton";
+import ChatList from "@/app/(chat)/chat/components/ChatList";
 
 function AppSidebar() {
   const { data: session } = authClient.useSession();
-  const user = session?.user;
+  const userInfo = session?.user;
   const [selectedValues, setSelectedValues] = useState<Option[]>([]);
   const hiddenInputRef = useRef<HTMLInputElement>(null);
-  const chats: Option[] = [
-    {
-      label: "Nextjs",
-      value: "nextjs",
-    },
-    {
-      label: "React",
-      value: "react",
-    },
-    {
-      label: "Vue",
-      value: "vue",
-    },
-  ];
+  const {
+    data: users,
+    isPending,
+    isError,
+  } = useQuery({
+    queryKey: ["users"],
+    queryFn: getUsers,
+  });
+
+  if (isError) toast.error("Cannot fetch users");
+  let userOptions: Option[] = [];
+  if (users != null) {
+    const filteredUsers = users?.filter(
+      (user: any) => user.id !== userInfo?.id,
+    );
+    userOptions = filteredUsers?.map((user: any) => ({
+      label: user.name,
+      value: user.id,
+    }));
+  }
   useEffect(() => {
     if (hiddenInputRef.current) {
       hiddenInputRef.current.value = JSON.stringify(
         selectedValues.map((opt) => opt.value),
       );
-      console.log(hiddenInputRef.current.value);
     }
   }, [selectedValues]);
   return (
@@ -93,7 +103,7 @@ function AppSidebar() {
                   <MultipleSelector
                     value={selectedValues}
                     onChange={setSelectedValues}
-                    options={chats}
+                    options={userOptions}
                     placeholder="Choose members"
                     emptyIndicator={
                       <p className="text-gray-500">Nothing selected</p>
@@ -114,7 +124,9 @@ function AppSidebar() {
         </Dialog>
         <Input placeholder="Search for chats" />
       </SidebarHeader>
-      <SidebarContent></SidebarContent>
+      <SidebarContent>
+        <ChatList />
+      </SidebarContent>
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
@@ -124,16 +136,16 @@ function AppSidebar() {
                   <div className="flex gap-2">
                     <Avatar>
                       <AvatarImage
-                        src={user?.image as string}
-                        alt={`${user?.name} image`}
+                        src={userInfo?.image as string}
+                        alt={`${userInfo?.name} image`}
                       />
                       <AvatarFallback>
-                        {user?.name[0].toUpperCase()}
+                        {userInfo?.name[0].toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col">
-                      <p>{user?.name}</p>
-                      <p className="text-xs">{user?.email}</p>
+                      <p>{userInfo?.name}</p>
+                      <p className="text-xs">{userInfo?.email}</p>
                     </div>
                   </div>
                   <ChevronsUpDown className="ml-auto" />
