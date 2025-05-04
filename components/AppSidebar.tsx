@@ -37,10 +37,9 @@ import { Label } from "./ui/label";
 import { Option } from "@/components/ui/multiple-selector";
 import { authClient } from "@/lib/auth-client";
 import { useEffect, useRef, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { getUsers } from "@/lib/utils";
-import { Skeleton } from "./ui/skeleton";
 import ChatList from "@/app/(chat)/chat/components/ChatList";
 
 function AppSidebar() {
@@ -48,6 +47,7 @@ function AppSidebar() {
   const userInfo = session?.user;
   const [selectedValues, setSelectedValues] = useState<Option[]>([]);
   const hiddenInputRef = useRef<HTMLInputElement>(null);
+  const queryClient = useQueryClient();
   const {
     data: users,
     isPending,
@@ -86,7 +86,20 @@ function AppSidebar() {
             <Button>New Chat</Button>
           </DialogTrigger>
           <DialogContent>
-            <form action={createChatAction} className="space-y-6">
+            <form
+              className="space-y-6"
+              onSubmit={async (e: React.FormEvent<HTMLFormElement>) => {
+                e.preventDefault();
+                const formData = new FormData(e.currentTarget);
+                try {
+                  await createChatAction(formData);
+                  queryClient.invalidateQueries({ queryKey: ["chats"] });
+                  toast.success("Chat created successfully");
+                } catch (err) {
+                  toast.error("Chat can't be created");
+                }
+              }}
+            >
               <DialogHeader>
                 <DialogTitle>Create New Chat</DialogTitle>
                 <DialogDescription>
