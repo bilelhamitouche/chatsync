@@ -26,6 +26,21 @@ export async function getChatMessages(chatId: string) {
   }
 }
 
+export async function getChatMemberInfo(chatId: string) {
+  await isAuthenticated();
+  try {
+    const memberInfo = await db
+      .select({ id: user.id, name: user.name, imageUrl: user.image })
+      .from(chat)
+      .fullJoin(chatMember, eq(chat.id, chatMember.chatId))
+      .fullJoin(user, eq(chatMember.userId, user.id))
+      .where(eq(chatMember.chatId, chatId));
+    return memberInfo;
+  } catch (err) {
+    throw new Error("Database Error");
+  }
+}
+
 export async function getChats() {
   const userInfo = await getUserInfo();
   await isAuthenticated();
@@ -36,7 +51,6 @@ export async function getChats() {
       .leftJoin(chatMember, eq(chat.id, chatMember.chatId))
       .leftJoin(user, eq(chatMember.userId, user.id))
       .where(eq(chatMember.userId, userInfo?.id as string));
-    console.log(chats);
     return chats;
   } catch (err) {
     throw new Error("Database Error");
