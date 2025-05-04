@@ -1,11 +1,26 @@
-import { ScrollArea } from "@/components/ui/scroll-area";
 import Navbar from "../components/navbar";
+import { getChatMemberInfo, getChatMessages } from "@/lib/queries";
+import { getUserInfo } from "@/actions/auth";
+import Messages from "../components/Messages";
+import ChatForm from "../components/ChatForm";
 
-function Chat() {
+async function Chat({ params }: { params: Promise<{ chatId: string }> }) {
+  const chatParams = await params;
+  const user = await getUserInfo();
+  const chatMessages = await getChatMessages(chatParams.chatId);
+  const memberInfo = await getChatMemberInfo(chatParams.chatId);
+  const filteredMemberInfo = memberInfo?.filter(
+    (member) => member.id !== user?.id,
+  );
   return (
-    <div className="h-full">
-      <Navbar memberInfo={[]} />
-      <ScrollArea className="p-4 w-full"></ScrollArea>
+    <div className="grid w-full h-screen grid-rows-[auto_1fr_auto]">
+      {filteredMemberInfo != null ? (
+        <Navbar memberInfo={filteredMemberInfo} />
+      ) : (
+        <Navbar memberInfo={[]} />
+      )}
+      <Messages />
+      <ChatForm />
     </div>
   );
 }
