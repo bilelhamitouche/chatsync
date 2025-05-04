@@ -2,7 +2,6 @@
 
 import { createChat } from "@/lib/queries";
 import { getUserInfo } from "./auth";
-import { revalidatePath } from "next/cache";
 
 export async function createChatAction(formData: FormData) {
   const name = formData.get("name") as string;
@@ -13,7 +12,6 @@ export async function createChatAction(formData: FormData) {
     newMembers.push(user?.id);
     await createChat(name, newMembers);
   }
-  revalidatePath("/chat");
 }
 
 export async function createMessageAction(formData: FormData) {
