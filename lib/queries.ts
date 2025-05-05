@@ -16,10 +16,18 @@ export async function getChatMessages(chatId: string) {
   await isAuthenticated();
   try {
     const messages = await db
-      .select()
+      .select({
+        id: message.id,
+        content: message.content,
+        senderId: message.senderId,
+        createdAt: message.createdAt,
+        senderImage: user.image,
+        senderName: user.name,
+      })
       .from(message)
-      .fullJoin(chatMember, eq(message.senderId, chatMember.userId))
-      .where(eq(chatMember.chatId, chatId));
+      .leftJoin(chatMember, eq(message.senderId, chatMember.userId))
+      .leftJoin(user, eq(chatMember.userId, user.id))
+      .where(eq(message.chatId, chatId));
     return messages;
   } catch (err) {
     throw new Error("Database Error");
