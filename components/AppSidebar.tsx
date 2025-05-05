@@ -44,17 +44,15 @@ import ChatList from "@/app/(chat)/chat/components/ChatList";
 
 function AppSidebar() {
   const { data: session } = authClient.useSession();
+  const isAuthenticated = session !== null;
   const userInfo = session?.user;
   const [selectedValues, setSelectedValues] = useState<Option[]>([]);
   const hiddenInputRef = useRef<HTMLInputElement>(null);
   const queryClient = useQueryClient();
-  const {
-    data: users,
-    isPending,
-    isError,
-  } = useQuery({
+  const { data: users, isError } = useQuery({
     queryKey: ["users"],
     queryFn: getUsers,
+    enabled: isAuthenticated,
   });
 
   if (isError) toast.error("Cannot fetch users");
