@@ -16,3 +16,9 @@ export async function getUsers() {
   const users = await response.json();
   return users;
 }
+
+export async function getChatMessages(chatId: string) {
+  const response = await fetch(`/api/${chatId}/messages`);
+  const messages = await response.json();
+  return messages;
+}
