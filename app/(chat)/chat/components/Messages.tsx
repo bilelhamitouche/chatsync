@@ -1,5 +1,65 @@
-import { ScrollArea } from "@/components/ui/scroll-area";
+"use client";
 
-export default function Messages() {
-  return <ScrollArea className="p-4 w-full h-full"></ScrollArea>;
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { authClient } from "@/lib/auth-client";
+import { getChatMessages } from "@/lib/utils";
+import { useQuery } from "@tanstack/react-query";
+import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
+
+export default function Messages({ chatId }: { chatId: string }) {
+  const { data: session } = authClient.useSession();
+  const {
+    data: messages,
+    isError,
+    isPending,
+  } = useQuery({
+    queryKey: ["messages"],
+    queryFn: async () => getChatMessages(chatId),
+  });
+  if (isError) toast.error("Cannot fetch messages");
+  if (isPending)
+    return (
+      <div className="h-full">
+        <Loader2 className="animate-spin" />
+      </div>
+    );
+  return (
+    <ScrollArea className="p-4 w-full h-full">
+      <div className="flex flex-col gap-4 w-full h-full">
+        {messages &&
+          messages.map((message: any, index: number) => (
+            <li
+              className={`flex items-center w-full ${message.senderId === session?.user.id ? "justify-end" : "justify-start"}`}
+              key={index}
+            >
+              <div
+                className={`flex ${message.senderId === session?.user.id ? "flex-row-reverse" : "flex-row"} gap-2 items-start`}
+              >
+                <Avatar>
+                  <AvatarImage
+                    src={message.senderImage as string}
+                    alt={`${message.senderName} image`}
+                  />
+                  <AvatarFallback>
+                    {message.senderName.toLowerCase()[0]}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="flex flex-col gap-1">
+                  <div className="p-2 text-white rounded-full bg-primary">
+                    {message.content}
+                  </div>
+                  <span className="pl-4 text-xs text-left text-gray-500">
+                    {new Date(message.createdAt).getHours() +
+                      ":" +
+                      new Date(message.createdAt).getMinutes()}
+                  </span>
+                </div>
+              </div>
+            </li>
+          ))}
+      </div>
+    </ScrollArea>
+  );
 }
