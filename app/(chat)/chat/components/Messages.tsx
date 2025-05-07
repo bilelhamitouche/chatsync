@@ -5,12 +5,13 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { authClient } from "@/lib/auth-client";
 import { useEffect, useRef, useState } from "react";
 import Pusher from "pusher-js";
+import { ChatMessage } from "@/lib/types";
 
 export default function Messages({
   initialMessages,
   chatId,
 }: {
-  initialMessages: any;
+  initialMessages: ChatMessage[];
   chatId: string;
 }) {
   const { data: session } = authClient.useSession();
@@ -21,13 +22,13 @@ export default function Messages({
       cluster: "eu",
     });
     const channel = pusher.subscribe(chatId);
-    channel.bind("chat", (data: any) => {
-      setMessages((prevMessages: any) => [...prevMessages, data]);
+    channel.bind("chat", (data: ChatMessage) => {
+      setMessages((prevMessages: ChatMessage[]) => [...prevMessages, data]);
     });
     return () => {
       pusher.unsubscribe(chatId);
     };
-  }, []);
+  }, [chatId]);
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
@@ -35,10 +36,10 @@ export default function Messages({
     <ScrollArea className="p-4 w-full h-full">
       <div className="flex flex-col gap-4 w-full h-full">
         {messages &&
-          messages.map((message: any, index: number) => (
+          messages.map((message: ChatMessage) => (
             <li
               className={`flex items-center w-full ${message.senderId === session?.user.id ? "justify-end" : "justify-start"}`}
-              key={index}
+              key={message.id}
             >
               <div
                 className={`flex ${message.senderId === session?.user.id ? "flex-row-reverse" : "flex-row"} gap-2 items-start`}
@@ -49,7 +50,7 @@ export default function Messages({
                     alt={`${message.senderName} image`}
                   />
                   <AvatarFallback>
-                    {message.senderName.toLowerCase()[0]}
+                    {message.senderName?.toLowerCase()[0]}
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col gap-1">

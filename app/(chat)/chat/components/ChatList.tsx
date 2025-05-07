@@ -6,6 +6,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { authClient } from "@/lib/auth-client";
+import { Chat } from "@/lib/types";
 import { getChats } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
@@ -27,12 +28,12 @@ export default function ChatList() {
   if (userChats?.chats != null)
     return (
       <SidebarMenu>
-        {userChats.chats.map((chat: any) => {
-          if (chat.chat != null) {
+        {userChats.chats.map((chat: Chat) => {
+          if (chat != null) {
             return (
-              <SidebarMenuItem key={chat.chat?.id}>
+              <SidebarMenuItem key={chat?.id}>
                 <SidebarMenuButton asChild>
-                  <Link href={`/chat/${chat.chat.id}`}>
+                  <Link href={`/chat/${chat.id}`}>
                     {isPending ? (
                       <div className="flex gap-2 items-center">
                         <Skeleton className="rounded-full size-8" />
@@ -42,14 +43,14 @@ export default function ChatList() {
                       <div className="flex gap-2 items-center">
                         <Avatar>
                           <AvatarImage
-                            src={chat.user?.image as string}
-                            alt={`${chat.user?.name} image`}
+                            src={chat.userImage as string}
+                            alt={`${chat.userName} image`}
                           />
                           <AvatarFallback>
-                            {chat.user?.name[0].toUpperCase()}
+                            {chat.userName[0].toUpperCase()}
                           </AvatarFallback>
                         </Avatar>
-                        <span>{chat.chat?.name}</span>
+                        <span>{chat.name}</span>
                       </div>
                     )}
                   </Link>
