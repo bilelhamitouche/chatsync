@@ -74,8 +74,9 @@ export async function createMessage(
   try {
     const newMessage = await db
       .insert(message)
-      .values({ content, senderId, chatId });
-    return newMessage;
+      .values({ content, senderId, chatId })
+      .returning();
+    return newMessage[0];
   } catch (err) {
     throw new Error("Database Error");
   }
