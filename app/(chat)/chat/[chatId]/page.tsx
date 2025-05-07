@@ -1,11 +1,12 @@
 import Navbar from "../components/navbar";
-import { getChatMemberInfo } from "@/lib/queries";
+import { getChatMemberInfo, getChatMessages } from "@/lib/queries";
 import { getUserInfo } from "@/actions/auth";
 import Messages from "../components/Messages";
 import ChatForm from "../components/ChatForm";
 
 async function Chat({ params }: { params: Promise<{ chatId: string }> }) {
   const chatParams = await params;
+  const initialMessages = await getChatMessages(chatParams.chatId);
   const user = await getUserInfo();
   const memberInfo = await getChatMemberInfo(chatParams.chatId);
   const filteredMemberInfo = memberInfo?.filter(
@@ -18,8 +19,8 @@ async function Chat({ params }: { params: Promise<{ chatId: string }> }) {
       ) : (
         <Navbar memberInfo={[]} />
       )}
-      <Messages chatId={chatParams.chatId} />
-      <ChatForm />
+      <Messages initialMessages={initialMessages} chatId={chatParams.chatId} />
+      <ChatForm chatId={chatParams.chatId} />
     </div>
   );
 }
