@@ -41,7 +41,7 @@ function SignUpForm() {
     },
   });
   return (
-    <Card className="min-w-sm">
+    <Card className="min-w-xs md:min-w-sm">
       <CardHeader>
         <CardTitle className="text-xl text-center">Sign Up</CardTitle>
         <CardDescription className="text-center">

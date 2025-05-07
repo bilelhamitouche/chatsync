@@ -40,7 +40,7 @@ function SignInForm() {
     },
   });
   return (
-    <Card className="min-w-sm">
+    <Card className="min-w-xs md:min-w-sm">
       <CardHeader>
         <CardTitle className="text-xl text-center">Sign In</CardTitle>
         <CardDescription className="text-center">
