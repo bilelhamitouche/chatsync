@@ -19,7 +19,10 @@ async function Chat({ params }: { params: Promise<{ chatId: string }> }) {
       ) : (
         <Navbar memberInfo={[]} />
       )}
-      <Messages initialMessages={initialMessages} chatId={chatParams.chatId} />
+      <Messages
+        initialMessages={initialMessages ?? []}
+        chatId={chatParams.chatId}
+      />
       <ChatForm chatId={chatParams.chatId} />
     </div>
   );
