@@ -41,6 +41,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { getUsers } from "@/lib/utils";
 import ChatList from "@/app/(chat)/chat/components/ChatList";
+import { User } from "@/lib/types";
 
 function AppSidebar() {
   const { data: session } = authClient.useSession();
@@ -59,9 +60,9 @@ function AppSidebar() {
   let userOptions: Option[] = [];
   if (users != null) {
     const filteredUsers = users?.filter(
-      (user: any) => user.id !== userInfo?.id,
+      (user: User) => user.id !== userInfo?.id,
     );
-    userOptions = filteredUsers?.map((user: any) => ({
+    userOptions = filteredUsers?.map((user: User) => ({
       label: user.name,
       value: user.id,
     }));
@@ -94,7 +95,9 @@ function AppSidebar() {
                   queryClient.invalidateQueries({ queryKey: ["chats"] });
                   toast.success("Chat created successfully");
                 } catch (err) {
-                  toast.error("Chat can't be created");
+                  if (err !== null) {
+                    toast.error("Chat can't be created");
+                  }
                 }
               }}
             >
