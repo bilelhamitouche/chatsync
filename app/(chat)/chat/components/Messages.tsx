@@ -3,28 +3,34 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { authClient } from "@/lib/auth-client";
-import { getChatMessages } from "@/lib/utils";
-import { useQuery } from "@tanstack/react-query";
-import { Loader2 } from "lucide-react";
-import { toast } from "sonner";
+import { useEffect, useRef, useState } from "react";
+import Pusher from "pusher-js";
 
-export default function Messages({ chatId }: { chatId: string }) {
+export default function Messages({
+  initialMessages,
+  chatId,
+}: {
+  initialMessages: any;
+  chatId: string;
+}) {
   const { data: session } = authClient.useSession();
-  const {
-    data: messages,
-    isError,
-    isPending,
-  } = useQuery({
-    queryKey: ["messages"],
-    queryFn: async () => getChatMessages(chatId),
-  });
-  if (isError) toast.error("Cannot fetch messages");
-  if (isPending)
-    return (
-      <div className="h-full">
-        <Loader2 className="animate-spin" />
-      </div>
-    );
+  const [messages, setMessages] = useState(initialMessages);
+  const scrollRef = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY!, {
+      cluster: "eu",
+    });
+    const channel = pusher.subscribe(chatId);
+    channel.bind("chat", (data: any) => {
+      setMessages((prevMessages: any) => [...prevMessages, data]);
+    });
+    return () => {
+      pusher.unsubscribe(chatId);
+    };
+  }, []);
+  useEffect(() => {
+    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
   return (
     <ScrollArea className="p-4 w-full h-full">
       <div className="flex flex-col gap-4 w-full h-full">
@@ -47,7 +53,7 @@ export default function Messages({ chatId }: { chatId: string }) {
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col gap-1">
-                  <div className="p-2 text-white rounded-full bg-primary">
+                  <div className="py-2 px-2 text-center text-white rounded-full min-w-10 bg-primary">
                     {message.content}
                   </div>
                   <span className="pl-4 text-xs text-left text-gray-500">
@@ -60,6 +66,7 @@ export default function Messages({ chatId }: { chatId: string }) {
             </li>
           ))}
       </div>
+      <div ref={scrollRef}></div>
     </ScrollArea>
   );
 }
