@@ -28,13 +28,13 @@ function Faq() {
           key={index}
           type="single"
           collapsible
-          className="flex flex-col mx-auto max-w-2xl min-w-2xl"
+          className="flex flex-col mx-auto max-w-xs md:max-w-md lg:max-w-2xl md:min-w-sm lg:min-w-2xl"
         >
           <AccordionItem value={index.toString()}>
             <AccordionTrigger className="w-full text-xl">
               {question.title}
             </AccordionTrigger>
-            <AccordionContent className="w-full text-lg">
+            <AccordionContent className="w-full text-base md:text-lg">
               {question.text}
             </AccordionContent>
           </AccordionItem>

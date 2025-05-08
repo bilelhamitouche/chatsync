@@ -30,7 +30,7 @@ function Contact() {
     },
   ];
   return (
-    <div className="container py-28 px-16 mx-auto space-y-16 max-w-sm text-center lg:max-w-5xl">
+    <div className="container py-28 px-16 mx-auto space-y-16 text-center lg:max-w-5xl">
       <div className="space-y-4">
         <h2 className="text-4xl font-bold">Contact Us</h2>
         <p className="mx-auto max-w-2xl text-xl text-gray-500">
