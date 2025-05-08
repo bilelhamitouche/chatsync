@@ -1,6 +1,6 @@
 function TermsOfService() {
   return (
-    <div className="container py-28 mx-auto space-y-8 max-w-4xl">
+    <div className="container py-28 px-8 mx-auto space-y-8 max-w-4xl">
       <h2 className="text-4xl font-bold">Terms of Service</h2>
       <div className="flex flex-col gap-8 list-decimal">
         <div className="space-y-4">
