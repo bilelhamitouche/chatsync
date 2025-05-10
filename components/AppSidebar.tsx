@@ -1,6 +1,5 @@
 "use client";
 
-import { signOutAction } from "@/actions/auth";
 import { Button } from "./ui/button";
 import {
   Dialog,
@@ -42,8 +41,10 @@ import { toast } from "sonner";
 import { getUsers } from "@/lib/utils";
 import ChatList from "@/app/(chat)/chat/components/ChatList";
 import { User } from "@/lib/types";
+import { useRouter } from "next/navigation";
 
 function AppSidebar() {
+  const router = useRouter();
   const { data: session } = authClient.useSession();
   const isAuthenticated = session !== null;
   const userInfo = session?.user;
@@ -172,16 +173,19 @@ function AppSidebar() {
                     <span>Settings</span>
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <form
-                    action={signOutAction}
-                    className="flex items-start w-full"
-                  >
-                    <button className="flex gap-2 items-center w-full text-left text-red-500">
-                      <LogOut className="text-red-500" />
-                      <span>Sign Out</span>
-                    </button>
-                  </form>
+                <DropdownMenuItem
+                  onSelect={(event) => {
+                    event.preventDefault();
+                    authClient.signOut({
+                      fetchOptions: {
+                        onSuccess: () => router.push("/signin"),
+                      },
+                    });
+                  }}
+                  className="flex gap-2 items-center cursor-pointer"
+                >
+                  <LogOut className="text-red-500" />
+                  <span className="text-red-500">Sign Out</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
