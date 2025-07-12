@@ -5,6 +5,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { authClient } from "@/lib/auth-client";
 import { useEffect, useRef, useState } from "react";
 import Pusher from "pusher-js";
+import { format } from "date-fns";
 import { ChatMessage } from "@/lib/types";
 
 export default function Messages({
@@ -58,9 +59,7 @@ export default function Messages({
                     {message.content}
                   </div>
                   <span className="pl-4 text-xs text-left text-gray-500">
-                    {new Date(message.createdAt).getHours() +
-                      ":" +
-                      new Date(message.createdAt).getMinutes()}
+                    {format(message.createdAt, "HH:mm")}
                   </span>
                 </div>
               </div>
