@@ -13,11 +13,11 @@ const SettingsTabs = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <Tabs value={activeTab} className="w-full">
-      <TabsList>
-        <TabsTrigger asChild value="account" className="min-w-sm">
+      <TabsList className="flex w-full">
+        <TabsTrigger asChild value="account">
           <Link href="/settings/account">Account</Link>
         </TabsTrigger>
-        <TabsTrigger asChild value="password" className="min-w-sm">
+        <TabsTrigger asChild value="password">
           <Link href="/settings/password">Password</Link>
         </TabsTrigger>
       </TabsList>

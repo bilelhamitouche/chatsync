@@ -94,7 +94,7 @@ function Account() {
             />
             <Button type="submit" disabled={isPending}>
               {isPending ? (
-                <div>
+                <div classsName="flex items-center gap-2">
                   <Loader2 className="animate-spin" />
                   <span>Please wait</span>
                 </div>
