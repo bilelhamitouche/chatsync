@@ -8,13 +8,13 @@ function Footer() {
       <div className="flex flex-col justify-between">
         <div className="flex gap-4 items-center">
           <Link href="https://instagram.com/chatsync">
-            <Instagram color="maroon" />
+            <Instagram />
           </Link>
           <Link href="https://twitter.com/chatsync">
-            <Twitter color="skyblue" />
+            <Twitter />
           </Link>
           <Link href="https://facebook.com/chatsync">
-            <Facebook color="blue" />
+            <Facebook />
           </Link>
         </div>
         <p className="text-gray-500">
