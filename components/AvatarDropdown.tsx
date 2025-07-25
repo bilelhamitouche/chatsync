@@ -1,6 +1,5 @@
 import { ChevronsUpDown } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { SidebarMenuButton } from "./ui/sidebar";
 
 interface AvatarDropdownProps {
   name: string;
@@ -14,7 +13,7 @@ export default function AvatarDropdown({
   image,
 }: AvatarDropdownProps) {
   return (
-    <SidebarMenuButton size="lg">
+    <>
       <div className="flex gap-2">
         <Avatar>
           <AvatarImage src={image as string} alt={`${name} image`} />
@@ -26,6 +25,6 @@ export default function AvatarDropdown({
         </div>
       </div>
       <ChevronsUpDown className="ml-auto" />
-    </SidebarMenuButton>
+    </>
   );
 }

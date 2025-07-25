@@ -17,6 +17,7 @@ import {
   SidebarFooter,
   SidebarHeader,
   SidebarMenu,
+  SidebarMenuButton,
   SidebarMenuItem,
 } from "./ui/sidebar";
 import { createChatAction } from "@/actions/chat";
@@ -36,7 +37,7 @@ import { authClient } from "@/lib/auth-client";
 import { useEffect, useRef, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { getUsers } from "@/lib/utils";
+import { getUsersAndChats } from "@/lib/utils";
 import ChatList from "@/app/(chat)/chat/components/ChatList";
 import { User } from "@/lib/types";
 import { useRouter } from "next/navigation";
@@ -51,20 +52,16 @@ function AppSidebar() {
   const [selectedValues, setSelectedValues] = useState<Option[]>([]);
   const hiddenInputRef = useRef<HTMLInputElement>(null);
   const queryClient = useQueryClient();
-  const {
-    data: users,
-    isError,
-    isLoading,
-  } = useQuery({
-    queryKey: ["users"],
-    queryFn: getUsers,
+  const { data, isError, isLoading } = useQuery({
+    queryKey: ["users-chats"],
+    queryFn: getUsersAndChats,
     enabled: isAuthenticated,
   });
 
   if (isError) toast.error("Cannot fetch users");
   let userOptions: Option[] = [];
-  if (users != null) {
-    const filteredUsers = users?.filter(
+  if (data?.users != null) {
+    const filteredUsers = data.users?.filter(
       (user: User) => user.id !== userInfo?.id,
     );
     userOptions = filteredUsers?.map((user: User) => ({
@@ -97,7 +94,7 @@ function AppSidebar() {
                 const formData = new FormData(e.currentTarget);
                 try {
                   await createChatAction(formData);
-                  queryClient.invalidateQueries({ queryKey: ["chats"] });
+                  queryClient.invalidateQueries({ queryKey: ["users-chats"] });
                   toast.success("Chat created successfully");
                 } catch (err) {
                   if (err !== null) {
@@ -144,22 +141,30 @@ function AppSidebar() {
         <Input placeholder="Search for chats" />
       </SidebarHeader>
       <SidebarContent>
-        <ChatList />
+        {isPending || isLoading ? (
+          <div className="p-2 text-sm text-center text-gray-500">
+            Loading Chats...
+          </div>
+        ) : (
+          <ChatList chats={data?.chats} />
+        )}
       </SidebarContent>
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                {isPending || isLoading ? (
-                  <AvatarDropdownSkeleton />
-                ) : (
-                  <AvatarDropdown
-                    name={userInfo?.name as string}
-                    email={userInfo?.email as string}
-                    image={userInfo?.image as string}
-                  />
-                )}
+                <SidebarMenuButton size="lg">
+                  {isPending || isLoading ? (
+                    <AvatarDropdownSkeleton />
+                  ) : (
+                    <AvatarDropdown
+                      name={userInfo?.name as string}
+                      email={userInfo?.email as string}
+                      image={userInfo?.image as string}
+                    />
+                  )}
+                </SidebarMenuButton>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="center" className="w-56">
                 <DropdownMenuItem asChild>
