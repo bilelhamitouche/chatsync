@@ -5,7 +5,7 @@ import { ArrowLeft } from "lucide-react";
 
 function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="container justify-center py-8 mx-auto space-y-4 max-w-3xl h-full">
+    <div className="container justify-center p-8 mx-auto space-y-4 max-w-3xl h-full">
       <Button variant="link" className="text-gray-500" asChild>
         <Link href="/chat">
           <ArrowLeft />
