@@ -17,13 +17,12 @@ import {
   SidebarFooter,
   SidebarHeader,
   SidebarMenu,
-  SidebarMenuButton,
   SidebarMenuItem,
 } from "./ui/sidebar";
 import { createChatAction } from "@/actions/chat";
 import MultipleSelector from "./ui/multiple-selector";
 import Link from "next/link";
-import { ChevronsUpDown, LogOut, Settings } from "lucide-react";
+import { LogOut, Settings } from "lucide-react";
 import { Input } from "./ui/input";
 import {
   DropdownMenu,
@@ -31,7 +30,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Label } from "./ui/label";
 import { Option } from "@/components/ui/multiple-selector";
 import { authClient } from "@/lib/auth-client";
@@ -42,16 +40,22 @@ import { getUsers } from "@/lib/utils";
 import ChatList from "@/app/(chat)/chat/components/ChatList";
 import { User } from "@/lib/types";
 import { useRouter } from "next/navigation";
+import AvatarDropdownSkeleton from "./AvatarDropdownSkeleton";
+import AvatarDropdown from "./AvatarDropdown";
 
 function AppSidebar() {
   const router = useRouter();
-  const { data: session } = authClient.useSession();
+  const { data: session, isPending } = authClient.useSession();
   const isAuthenticated = session !== null;
   const userInfo = session?.user;
   const [selectedValues, setSelectedValues] = useState<Option[]>([]);
   const hiddenInputRef = useRef<HTMLInputElement>(null);
   const queryClient = useQueryClient();
-  const { data: users, isError } = useQuery({
+  const {
+    data: users,
+    isError,
+    isLoading,
+  } = useQuery({
     queryKey: ["users"],
     queryFn: getUsers,
     enabled: isAuthenticated,
@@ -147,24 +151,15 @@ function AppSidebar() {
           <SidebarMenuItem>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <SidebarMenuButton size="lg">
-                  <div className="flex gap-2">
-                    <Avatar>
-                      <AvatarImage
-                        src={userInfo?.image as string}
-                        alt={`${userInfo?.name} image`}
-                      />
-                      <AvatarFallback>
-                        {userInfo?.name[0].toUpperCase()}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="flex flex-col">
-                      <p>{userInfo?.name}</p>
-                      <p className="text-xs">{userInfo?.email}</p>
-                    </div>
-                  </div>
-                  <ChevronsUpDown className="ml-auto" />
-                </SidebarMenuButton>
+                {isPending || isLoading ? (
+                  <AvatarDropdownSkeleton />
+                ) : (
+                  <AvatarDropdown
+                    name={userInfo?.name as string}
+                    email={userInfo?.email as string}
+                    image={userInfo?.image as string}
+                  />
+                )}
               </DropdownMenuTrigger>
               <DropdownMenuContent align="center" className="w-56">
                 <DropdownMenuItem asChild>
