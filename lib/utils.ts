@@ -22,3 +22,8 @@ export async function getChatMessages(chatId: string) {
   const messages = await response.json();
   return messages;
 }
+
+export async function getUsersAndChats() {
+  const [users, chats] = await Promise.all([getUsers(), getChats()]);
+  return { users, chats };
+}
