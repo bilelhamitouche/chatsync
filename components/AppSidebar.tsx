@@ -82,6 +82,9 @@ function AppSidebar() {
         toast.error(result.message);
       }
     } catch (err) {
+      if (err instanceof Error) {
+        toast.error(err.message);
+      }
     }
   }
   return (
