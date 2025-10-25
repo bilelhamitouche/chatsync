@@ -63,9 +63,17 @@ export async function signUpAction(formData: FormData) {
 }
 
 export async function signOutAction() {
-  await auth.api.signOut({
-    headers: await headers(),
-  });
+  try {
+    await auth.api.signOut({
+      headers: await headers(),
+    });
+  } catch (err) {
+    if (err instanceof Error) {
+      return {
+        message: err.message,
+      };
+    }
+  }
   redirect("/signin");
 }
 
