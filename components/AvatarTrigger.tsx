@@ -1,17 +1,17 @@
 import { ChevronsUpDown } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
-interface AvatarDropdownProps {
+interface AvatarTriggerProps {
   name: string;
   email: string;
   image: string | undefined;
 }
 
-export default function AvatarDropdown({
+export default function AvatarTrigger({
   name,
   email,
   image,
-}: AvatarDropdownProps) {
+}: AvatarTriggerProps) {
   return (
     <>
       <div className="flex gap-2">
