@@ -12,6 +12,9 @@ const geistSans = Geist({
 export const metadata: Metadata = {
   title: "ChatSync",
   description: "ChatSync is the best messaging app on the planet",
+  // icons: {
+  //   icon: "/favicon.ico",
+  // }
 };
 
 export default function RootLayout({
@@ -21,6 +24,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="h-full">
+      <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
       <ClientProvider>
         <body className={`${geistSans.className} h-full antialiased`}>
           {children}

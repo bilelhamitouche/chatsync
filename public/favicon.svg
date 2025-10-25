@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="128" fill="none"/>
+  <g transform="translate(64 64)">
+    <path d="M192 0C85.961 0 0 71.635 0 160c0 42.467 21.413 81.069 56.531 108.281L32 352l85.625-33.438C142.721 323.721 166.78 320 192 320c106.039 0 192-71.635 192-160S298.039 0 192 0z" fill="#007BFF"/>
+    <rect x="112" y="128" width="160" height="24" rx="12" fill="white"/>
+    <rect x="112" y="184" width="112" height="24" rx="12" fill="white"/>
+  </g>
+  <text x="50%" y="460" font-family="Arial, Helvetica, sans-serif" font-weight="bold" font-size="64" text-anchor="middle" fill="#007BFF">ChatSync</text>
+</svg>
