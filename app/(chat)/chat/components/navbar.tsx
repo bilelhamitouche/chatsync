@@ -18,7 +18,6 @@ function Navbar({ memberInfo }: NavbarProps) {
           <Avatar>
             <AvatarImage
               src={memberInfo[0].imageUrl as string}
-              alt={`${memberInfo[0].name} image`}
             />
             <AvatarFallback>
               {memberInfo[0].name?.toUpperCase()[0]}
@@ -33,7 +32,6 @@ function Navbar({ memberInfo }: NavbarProps) {
               <Avatar key={member.id}>
                 <AvatarImage
                   src={member.imageUrl as string}
-                  alt={`${member.name} image`}
                 />
                 <AvatarFallback>{member.name}</AvatarFallback>
               </Avatar>
