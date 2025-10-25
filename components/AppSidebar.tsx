@@ -40,12 +40,11 @@ import { toast } from "sonner";
 import { getUsersAndChats } from "@/lib/utils";
 import ChatList from "@/app/(chat)/chat/components/ChatList";
 import { User } from "@/lib/types";
-import { useRouter } from "next/navigation";
 import AvatarDropdownSkeleton from "./AvatarDropdownSkeleton";
-import AvatarDropdown from "./AvatarDropdown";
+import AvatarTrigger from "./AvatarTrigger";
+import { signOutAction } from "@/actions/auth";
 
 function AppSidebar() {
-  const router = useRouter();
   const { data: session, isPending } = authClient.useSession();
   const isAuthenticated = session !== null;
   const userInfo = session?.user;
@@ -76,6 +75,15 @@ function AppSidebar() {
       );
     }
   }, [selectedValues]);
+  async function signOut() {
+    try {
+      const result = await signOutAction();
+      if (result.message) {
+        toast.error(result.message);
+      }
+    } catch (err) {
+    }
+  }
   return (
     <Sidebar className="p-2 bg-sidebar">
       <SidebarHeader className="flex space-y-2">
@@ -158,7 +166,7 @@ function AppSidebar() {
                   {isPending || isLoading ? (
                     <AvatarDropdownSkeleton />
                   ) : (
-                    <AvatarDropdown
+                    <AvatarTrigger
                       name={userInfo?.name as string}
                       email={userInfo?.email as string}
                       image={userInfo?.image as string}
@@ -174,14 +182,7 @@ function AppSidebar() {
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem
-                  onSelect={(event) => {
-                    event.preventDefault();
-                    authClient.signOut({
-                      fetchOptions: {
-                        onSuccess: () => router.push("/signin"),
-                      },
-                    });
-                  }}
+                  onSelect={signOut}
                   className="flex gap-2 items-center cursor-pointer"
                 >
                   <LogOut className="text-red-500" />
