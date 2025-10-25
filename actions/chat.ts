@@ -1,6 +1,6 @@
 "use server";
 
-import { createChat, createMessage } from "@/lib/queries";
+import { createChat, createMessage, deleteChat } from "@/lib/queries";
 import { getUserInfo } from "./auth";
 import Pusher from "pusher";
 
@@ -9,9 +9,30 @@ export async function createChatAction(formData: FormData) {
   const members = formData.get("members") as string;
   const user = await getUserInfo();
   if (members) {
-    const newMembers = JSON.parse(members);
-    newMembers.push(user?.id);
-    await createChat(name, newMembers);
+    try {
+      const newMembers = JSON.parse(members);
+      newMembers.push(user?.id);
+      await createChat(name, newMembers);
+    } catch (err) {
+      if (err instanceof Error) {
+        return {
+          message: err.message,
+        };
+      }
+    }
+  }
+}
+
+export async function deleteChatAction(formData: FormData) {
+  const id = formData.get("id") as string;
+  try {
+    await deleteChat(id);
+  } catch (err) {
+    if (err instanceof Error) {
+      return {
+        message: err.message,
+      };
+    }
   }
 }
 

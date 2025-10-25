@@ -114,3 +114,14 @@ export async function createChat(name: string, memberIds: string[]) {
     }
   }
 }
+
+export async function deleteChat(id: string) {
+  await isAuthenticated();
+  try {
+    await db.delete(chat).where(eq(chat.id, id));
+  } catch (err) {
+    if (err instanceof DrizzleError) {
+      throw new Error("Database Error");
+    }
+  }
+}
