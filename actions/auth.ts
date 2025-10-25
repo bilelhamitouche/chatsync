@@ -74,7 +74,6 @@ export async function signOutAction() {
       };
     }
   }
-  redirect("/signin");
 }
 
 export async function getUserInfo() {

@@ -43,8 +43,10 @@ import { User } from "@/lib/types";
 import AvatarDropdownSkeleton from "./AvatarDropdownSkeleton";
 import AvatarTrigger from "./AvatarTrigger";
 import { signOutAction } from "@/actions/auth";
+import { useRouter } from "next/navigation";
 
 function AppSidebar() {
+  const router = useRouter();
   const { data: session, isPending } = authClient.useSession();
   const isAuthenticated = session !== null;
   const userInfo = session?.user;
@@ -81,6 +83,7 @@ function AppSidebar() {
       if (result.message) {
         toast.error(result.message);
       }
+      router.push("/signin");
     } catch (err) {
       if (err instanceof Error) {
         toast.error(err.message);
