@@ -30,6 +30,9 @@ export default function ChatItem({ id, name, userName, userImage }: ChatItemProp
       }
     } catch (err) {
       toast.error("Error deleting chat");
+      if (err instanceof Error) {
+        toast.error(err.message);
+      }
     }
   }
   return (
