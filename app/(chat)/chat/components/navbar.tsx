@@ -37,7 +37,7 @@ function Navbar({ memberInfo }: NavbarProps) {
               </Avatar>
             ))}
           </ul>
-          <p className="text-sm text-gray-500">{memberInfo.length} Members</p>
+          <p className="text-sm text-gray-500 flex items-center gap-1">{memberInfo.length} Members</p>
         </div>
       )}
     </header>
