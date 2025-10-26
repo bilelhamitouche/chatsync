@@ -44,6 +44,7 @@ import AvatarDropdownSkeleton from "./AvatarDropdownSkeleton";
 import AvatarTrigger from "./AvatarTrigger";
 import { signOutAction } from "@/actions/auth";
 import { useRouter } from "next/navigation";
+import SearchBar from "@/app/(chat)/chat/components/SearchBar";
 
 function AppSidebar() {
   const router = useRouter();
@@ -152,7 +153,7 @@ function AppSidebar() {
             </form>
           </DialogContent>
         </Dialog>
-        <Input placeholder="Search for chats" />
+        <SearchBar />
       </SidebarHeader>
       <SidebarContent>
         {isPending || isLoading ? (
@@ -160,7 +161,7 @@ function AppSidebar() {
             Loading Chats...
           </div>
         ) : (
-          <ChatList chats={data?.chats} />
+          <ChatList initialChats={data?.chats} />
         )}
       </SidebarContent>
       <SidebarFooter>

@@ -3,6 +3,7 @@ import { Geist } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import ClientProvider from "@/components/QueryClientProvider";
+import { NuqsAdapter } from 'nuqs/adapters/next/app'
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -12,9 +13,6 @@ const geistSans = Geist({
 export const metadata: Metadata = {
   title: "ChatSync",
   description: "ChatSync is the best messaging app on the planet",
-  // icons: {
-  //   icon: "/favicon.ico",
-  // }
 };
 
 export default function RootLayout({
@@ -27,7 +25,9 @@ export default function RootLayout({
       <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
       <ClientProvider>
         <body className={`${geistSans.className} h-full antialiased`}>
-          {children}
+          <NuqsAdapter>
+            {children}
+          </NuqsAdapter>
           <Toaster theme="light" closeButton richColors position="top-center" />
         </body>
       </ClientProvider>

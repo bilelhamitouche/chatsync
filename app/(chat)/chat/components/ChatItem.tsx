@@ -38,7 +38,7 @@ export default function ChatItem({ id, name, userName, userImage }: ChatItemProp
   return (
     <SidebarMenuItem>
       <SidebarMenuButton asChild>
-        <div role="link" onClick={() => router.push(`/chat/${id}`)} className="flex w-full items-center justify-between">
+        <div role="link" onClick={() => router.push(`/chat/${id}`)} className="flex w-full items-center justify-between cursor-default">
           <div className="flex gap-2 items-center w-full">
             <Avatar>
               <AvatarImage
