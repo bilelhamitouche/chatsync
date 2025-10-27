@@ -34,7 +34,7 @@ import {
 import { Label } from "./ui/label";
 import { Option } from "@/components/ui/multiple-selector";
 import { authClient } from "@/lib/auth-client";
-import { useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { getUsersAndChats } from "@/lib/utils";
@@ -161,7 +161,13 @@ function AppSidebar() {
             Loading Chats...
           </div>
         ) : (
-          <ChatList initialChats={data?.chats} />
+          <Suspense fallback={
+            <div className="p-2 text-sm text-center text-gray-500">
+              Loading Chats...
+            </div>
+          }>
+            <ChatList initialChats={data?.chats} />
+          </Suspense>
         )}
       </SidebarContent>
       <SidebarFooter>
