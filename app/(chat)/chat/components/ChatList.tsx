@@ -17,7 +17,9 @@ export default function ChatList({ initialChats }: ChatListProps) {
   const search = searchParams.get("search");
   const [chats, setChats] = useState(initialChats);
   useEffect(() => {
-    setChats(() => initialChats.filter((chat) => chat.name.toLowerCase().includes(search as string)))
+    setChats(() => {
+      return search ? initialChats.filter((chat) => chat.name.toLowerCase().includes(search as string)) : initialChats;
+    })
   }, [initialChats, search])
   return (
     <SidebarMenu>
