@@ -153,7 +153,13 @@ function AppSidebar() {
             </form>
           </DialogContent>
         </Dialog>
-        <SearchBar />
+        <Suspense fallback={
+          <div className="p-2 text-sm text-center text-gray-500">
+            Loading Search...
+          </div>
+        }>
+          <SearchBar />
+        </Suspense>
       </SidebarHeader>
       <SidebarContent>
         {isPending || isLoading ? (
