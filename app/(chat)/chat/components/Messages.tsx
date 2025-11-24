@@ -5,8 +5,8 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { authClient } from "@/lib/auth-client";
 import { useEffect, useRef, useState } from "react";
 import Pusher from "pusher-js";
-import { formatDate } from "@/lib/utils";
 import { ChatMessage } from "@/lib/types";
+import ChatBubble from "./ChatBubble";
 
 export default function Messages({
   initialMessages,
@@ -39,11 +39,11 @@ export default function Messages({
         {messages &&
           messages.map((message: ChatMessage) => (
             <li
-              className={`flex items-center w-full ${message.senderId === session?.user.id ? "justify-end" : "justify-start"}`}
+              className={`flex items-center max-w-full ${message.senderId === session?.user.id ? "justify-end" : "justify-start"}`}
               key={message.id}
             >
               <div
-                className={`flex ${message.senderId === session?.user.id ? "flex-row-reverse" : "flex-row"} gap-2 items-start`}
+                className={`flex ${message.senderId === session?.user.id ? "flex-row-reverse" : "flex-row"} gap-2 items-start max-w-full`}
               >
                 <Avatar>
                   <AvatarImage
@@ -54,14 +54,10 @@ export default function Messages({
                     {message.senderName?.toUpperCase()[0]}
                   </AvatarFallback>
                 </Avatar>
-                <div className="flex flex-col gap-1">
-                  <div className="p-2 text-center text-white rounded-lg min-w-10 bg-primary">
-                    {message.content}
-                  </div>
-                  <span className="pl-4 text-xs text-left text-gray-500">
-                    {formatDate(new Date(message.createdAt))}
-                  </span>
-                </div>
+                <ChatBubble
+                  content={message.content}
+                  createdAt={message.createdAt}
+                />
               </div>
             </li>
           ))}
