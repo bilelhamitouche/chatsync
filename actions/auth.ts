@@ -5,6 +5,7 @@ import { signInSchema, signUpSchema } from "@/lib/zod";
 import { APIError } from "better-auth/api";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { cache } from "react";
 
 export async function signInAction(formData: FormData) {
   const email = formData.get("email") as string;
@@ -76,12 +77,12 @@ export async function signOutAction() {
   }
 }
 
-export async function getUserInfo() {
+export const getUserInfo = cache(async () => {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
   return session?.user;
-}
+});
 
 export async function isAuthenticated() {
   const session = await auth.api.getSession({
