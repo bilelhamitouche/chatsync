@@ -7,7 +7,6 @@ import { useEffect, useRef, useState } from "react";
 import Pusher from "pusher-js";
 import { formatDate } from "@/lib/utils";
 import { ChatMessage } from "@/lib/types";
-import { differenceInSeconds } from "date-fns";
 
 export default function Messages({
   initialMessages,
