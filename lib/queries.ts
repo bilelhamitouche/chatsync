@@ -29,7 +29,8 @@ export async function getChatMessages(chatId: string) {
       .from(message)
       .leftJoin(chatMember, eq(message.senderId, chatMember.userId))
       .leftJoin(user, eq(chatMember.userId, user.id))
-      .where(eq(message.chatId, chatId));
+      .where(eq(message.chatId, chatId))
+      .orderBy(message.createdAt);
     return messages;
   } catch (err) {
     if (err instanceof DrizzleError) {

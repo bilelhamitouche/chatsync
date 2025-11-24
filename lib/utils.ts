@@ -1,4 +1,5 @@
 import { clsx, type ClassValue } from "clsx";
+import { formatDistanceToNow } from "date-fns";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
@@ -26,4 +27,8 @@ export async function getChatMessages(chatId: string) {
 export async function getUsersAndChats() {
   const [users, chats] = await Promise.all([getUsers(), getChats()]);
   return { users, chats };
+}
+
+export function formatDate(createdAt: Date) {
+  return formatDistanceToNow(new Date(createdAt), { addSuffix: true });
 }

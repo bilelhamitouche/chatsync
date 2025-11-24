@@ -5,8 +5,9 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { authClient } from "@/lib/auth-client";
 import { useEffect, useRef, useState } from "react";
 import Pusher from "pusher-js";
-import { format } from "date-fns";
+import { formatDate } from "@/lib/utils";
 import { ChatMessage } from "@/lib/types";
+import { differenceInSeconds } from "date-fns";
 
 export default function Messages({
   initialMessages,
@@ -51,15 +52,15 @@ export default function Messages({
                     alt={`${message.senderName} image`}
                   />
                   <AvatarFallback>
-                    {message.senderName?.toLowerCase()[0]}
+                    {message.senderName?.toUpperCase()[0]}
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col gap-1">
-                  <div className="py-2 px-2 text-center text-white rounded-full min-w-10 bg-primary">
+                  <div className="p-2 text-center text-white rounded-lg min-w-10 bg-primary">
                     {message.content}
                   </div>
                   <span className="pl-4 text-xs text-left text-gray-500">
-                    {format(message.createdAt, "HH:mm")}
+                    {formatDate(new Date(message.createdAt))}
                   </span>
                 </div>
               </div>
