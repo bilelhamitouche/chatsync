@@ -65,7 +65,9 @@ function SignInForm() {
                     router.push("/chat");
                   }
                 } catch (err) {
-                  console.log(err);
+                  if (err instanceof Error) {
+                    toast.error(err.message);
+                  }
                 } finally {
                   setIsPending(false);
                 }

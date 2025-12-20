@@ -63,7 +63,9 @@ function Password() {
                   if (!result?.errors && !result?.message)
                     toast.success("Password changed successfully");
                 } catch (err) {
-                  console.log(err);
+                  if (err instanceof Error) {
+                    toast.error(err.message);
+                  }
                 } finally {
                   setIsPending(false);
                 }
