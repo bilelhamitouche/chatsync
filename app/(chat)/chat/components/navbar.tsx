@@ -1,5 +1,10 @@
 import CustomSidebarTrigger from "@/components/custom-sidebar-trigger";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface NavbarProps {
   memberInfo: {
@@ -11,15 +16,16 @@ interface NavbarProps {
 
 function Navbar({ memberInfo }: NavbarProps) {
   return (
-    <header className="flex p-4 w-full shadow-sm shadow-b">
+    <header className="flex gap-4 p-4 w-full shadow-sm shadow-b">
       <CustomSidebarTrigger />
       {memberInfo.length === 1 ? (
         <div className="flex gap-2 items-center px-2" key={memberInfo[0].id}>
           <Avatar>
             <AvatarImage
               src={memberInfo[0].imageUrl as string}
+              className="border border-gray-900"
             />
-            <AvatarFallback>
+            <AvatarFallback className="border border-gray-700">
               {memberInfo[0].name?.toUpperCase()[0]}
             </AvatarFallback>
           </Avatar>
@@ -27,17 +33,30 @@ function Navbar({ memberInfo }: NavbarProps) {
         </div>
       ) : (
         <div className="flex flex-col">
-          <ul className="flex gap-2 items-center">
-            {memberInfo.map((member) => (
-              <Avatar key={member.id}>
-                <AvatarImage
-                  src={member.imageUrl as string}
-                />
-                <AvatarFallback>{member.name}</AvatarFallback>
-              </Avatar>
+          <ul className="flex relative gap-2 items-center h-10">
+            {memberInfo.map((member, index) => (
+              <Tooltip key={member.id}>
+                <TooltipTrigger>
+                  <Avatar
+                    className="absolute top-0"
+                    style={{
+                      zIndex: memberInfo.length - index,
+                      transform: `translateX(${index * 12}px)`,
+                    }}
+                  >
+                    <AvatarImage src={member.imageUrl as string} />
+                    <AvatarFallback className="border border-gray-700">
+                      {member.name?.toUpperCase()[0]}
+                    </AvatarFallback>
+                  </Avatar>
+                </TooltipTrigger>
+                <TooltipContent>{member.name}</TooltipContent>
+              </Tooltip>
             ))}
           </ul>
-          <p className="text-sm text-gray-500 flex items-center gap-1">{memberInfo.length} Members</p>
+          <p className="flex gap-1 items-center text-sm text-gray-500">
+            {memberInfo.length} Members
+          </p>
         </div>
       )}
     </header>
