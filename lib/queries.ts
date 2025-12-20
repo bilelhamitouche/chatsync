@@ -27,8 +27,7 @@ export async function getChatMessages(chatId: string) {
         senderName: user.name,
       })
       .from(message)
-      .leftJoin(chatMember, eq(message.senderId, chatMember.userId))
-      .leftJoin(user, eq(chatMember.userId, user.id))
+      .leftJoin(user, eq(message.senderId, user.id))
       .where(eq(message.chatId, chatId))
       .orderBy(message.createdAt);
     return messages;

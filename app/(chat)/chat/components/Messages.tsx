@@ -1,5 +1,4 @@
 "use client";
-
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { authClient } from "@/lib/auth-client";
@@ -25,7 +24,10 @@ export default function Messages({
     });
     const channel = pusher.subscribe(chatId);
     channel.bind("chat", (data: ChatMessage) => {
-      setMessages((prevMessages: ChatMessage[]) => [...prevMessages, data]);
+      setMessages((prevMessages: ChatMessage[]) => {
+        if (prevMessages.some((m) => m.id === data.id)) return prevMessages;
+        return [...prevMessages, data];
+      });
     });
     return () => {
       pusher.unsubscribe(chatId);
