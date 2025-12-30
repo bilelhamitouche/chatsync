@@ -26,6 +26,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import Link from "next/link";
+import Image from "next/image";
 
 const Navbar = () => {
   const legals = [
@@ -43,8 +44,9 @@ const Navbar = () => {
     <section className="p-4">
       <div className="container mx-auto">
         <nav className="flex justify-between items-center">
-          <Link href="/" className="flex gap-2 items-center">
-            <span className="text-xl font-semibold tracking-tighter">
+          <Link href="/" className="flex gap-1 items-center">
+            <Image src="/favicon.svg" width="40" height="40" alt="logo image" />
+            <span className="text-2xl font-semibold tracking-tighter text-primary">
               ChatSync
             </span>
           </Link>

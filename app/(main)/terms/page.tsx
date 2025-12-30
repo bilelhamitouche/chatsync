@@ -4,7 +4,7 @@ function TermsOfService() {
       <h2 className="text-4xl font-bold">Terms of Service</h2>
       <div className="flex flex-col gap-8 list-decimal">
         <div className="space-y-4">
-          <h3 className="text-3xl font-medium">1. Acceptance of Terms</h3>
+          <h3 className="text-2xl font-medium">1. Acceptance of Terms</h3>
           <p>
             By accessing and using NovaChat, you agree to be bound by these
             Terms of Service and all applicable laws and regulations. If you do
@@ -13,7 +13,7 @@ function TermsOfService() {
           </p>
         </div>
         <div className="space-y-4">
-          <h3 className="text-3xl font-medium">2. Use License</h3>
+          <h3 className="text-2xl font-medium">2. Use License</h3>
           <p>
             Permission is granted to temporarily access NovaChat for personal,
             non-commercial use. This is the grant of a license, not a transfer
@@ -37,7 +37,7 @@ function TermsOfService() {
           </ul>
         </div>
         <div className="space-y-4">
-          <h3 className="text-3xl font-medium">3. User Conduct</h3>
+          <h3 className="text-2xl font-medium">3. User Conduct</h3>
           <p>
             You agree to use NovaChat only for lawful purposes and in a way that
             does not infringe the rights of, restrict or inhibit anyone
@@ -52,7 +52,7 @@ function TermsOfService() {
           </ul>
         </div>
         <div className="space-y-4">
-          <h3 className="text-3xl font-medium">4. Account Terms</h3>
+          <h3 className="text-2xl font-medium">4. Account Terms</h3>
           <p>
             You are responsible for maintaining the security of your account and
             password. NovaChat cannot and will not be liable for any loss or
@@ -60,7 +60,7 @@ function TermsOfService() {
           </p>
         </div>
         <div className="space-y-4">
-          <h3 className="text-3xl font-medium">5. Modifications</h3>
+          <h3 className="text-2xl font-medium">5. Modifications</h3>
           <p>
             NovaChat reserves the right to modify or discontinue, temporarily or
             permanently, the service with or without notice. We shall not be
@@ -69,7 +69,7 @@ function TermsOfService() {
           </p>
         </div>
         <div className="space-y-4">
-          <h3 className="text-3xl font-medium">6. Governing Law</h3>
+          <h3 className="text-2xl font-medium">6. Governing Law</h3>
           <p>
             These terms and conditions are governed by and construed in
             accordance with the laws, and you irrevocably submit to the
@@ -77,7 +77,7 @@ function TermsOfService() {
           </p>
         </div>
         <div className="space-y-4">
-          <h3 className="text-3xl font-medium">7. Contact Information</h3>
+          <h3 className="text-2xl font-medium">7. Contact Information</h3>
           <p>
             If you have any questions about these Terms of Service, please
             contact us at support@chatsync.com.
