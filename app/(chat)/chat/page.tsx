@@ -7,7 +7,7 @@ async function Chat() {
         <CustomSidebarTrigger />
       </header>
       <div className="flex justify-center items-center h-full">
-        <p className="text-lg text-gray-500">
+        <p className="max-w-sm text-lg text-center text-gray-500">
           Select a chat or create a new one to start messaging.
         </p>
       </div>
