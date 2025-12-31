@@ -16,7 +16,9 @@ export default function NavLink({ href, text }: NavLinkProps) {
   }
   return (
     <NavigationMenuLink className="px-4" asChild data-active={isActive(href)}>
-      <Link href={href}>{text}</Link>
+      <Link href={href} className="font-semibold">
+        {text}
+      </Link>
     </NavigationMenuLink>
   );
 }
