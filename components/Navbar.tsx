@@ -52,7 +52,9 @@ export default function Navbar() {
           <NavigationMenu className="hidden lg:block">
             <NavigationMenuList>
               <NavigationMenuItem>
-                <NavigationMenuTrigger>Legal</NavigationMenuTrigger>
+                <NavigationMenuTrigger className="font-semibold">
+                  Legal
+                </NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <div className="grid w-40">
                     {legals.map((legal, index) => (
