@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/sheet";
 import Link from "next/link";
 import Image from "next/image";
+import NavLink from "./NavLink";
 
 export default function Navbar() {
   const legals = [
@@ -57,41 +58,20 @@ export default function Navbar() {
                 <NavigationMenuContent>
                   <div className="grid w-40">
                     {legals.map((legal, index) => (
-                      <NavigationMenuLink
-                        href={legal.href}
+                      <NavLink
                         key={index}
-                        className={`min-w-full p-2 rounded-md transition-colors hover:bg-muted/70 ${navigationMenuTriggerStyle()}`}
-                        asChild
-                      >
-                        <Link href={legal.href}>
-                          <div key={legal.title} className="w-full">
-                            <p className="mb-1 font-semibold text-foreground">
-                              {legal.title}
-                            </p>
-                          </div>
-                        </Link>
-                      </NavigationMenuLink>
+                        href={legal.href}
+                        text={legal.title}
+                      />
                     ))}
                   </div>
                 </NavigationMenuContent>
               </NavigationMenuItem>
               <NavigationMenuItem>
-                <NavigationMenuLink
-                  href="/about"
-                  className={navigationMenuTriggerStyle()}
-                  asChild
-                >
-                  <Link href="/about">About</Link>
-                </NavigationMenuLink>
+                <NavLink href="/about" text="About" />
               </NavigationMenuItem>
               <NavigationMenuItem>
-                <NavigationMenuLink
-                  href="/contact"
-                  className={navigationMenuTriggerStyle()}
-                  asChild
-                >
-                  <Link href="/contact">Contact</Link>
-                </NavigationMenuLink>
+                <NavLink href="/contact" text="Contact" />
               </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
