@@ -28,7 +28,7 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 
-const Navbar = () => {
+export default function Navbar() {
   const legals = [
     {
       title: "Terms of service",
@@ -167,6 +167,4 @@ const Navbar = () => {
       </div>
     </section>
   );
-};
-
-export default Navbar;
+}
