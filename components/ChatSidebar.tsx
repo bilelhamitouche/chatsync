@@ -46,10 +46,9 @@ import { signOutAction } from "@/actions/auth";
 import { useRouter } from "next/navigation";
 import SearchBar from "@/app/(chat)/chat/components/SearchBar";
 
-function AppSidebar() {
+export default function ChatSidebar() {
   const router = useRouter();
   const { data: session, isPending } = authClient.useSession();
-  const isAuthenticated = session !== null;
   const userInfo = session?.user;
   const [selectedValues, setSelectedValues] = useState<Option[]>([]);
   const hiddenInputRef = useRef<HTMLInputElement>(null);
@@ -57,7 +56,6 @@ function AppSidebar() {
   const { data, isError, isLoading } = useQuery({
     queryKey: ["users-chats"],
     queryFn: getUsersAndChats,
-    enabled: isAuthenticated,
   });
 
   if (isError) toast.error("Cannot fetch users");
@@ -153,11 +151,13 @@ function AppSidebar() {
             </form>
           </DialogContent>
         </Dialog>
-        <Suspense fallback={
-          <div className="p-2 text-sm text-center text-gray-500">
-            Loading Search...
-          </div>
-        }>
+        <Suspense
+          fallback={
+            <div className="p-2 text-sm text-center text-gray-500">
+              Loading Search...
+            </div>
+          }
+        >
           <SearchBar />
         </Suspense>
       </SidebarHeader>
@@ -167,11 +167,13 @@ function AppSidebar() {
             Loading Chats...
           </div>
         ) : (
-          <Suspense fallback={
-            <div className="p-2 text-sm text-center text-gray-500">
-              Loading Chats...
-            </div>
-          }>
+          <Suspense
+            fallback={
+              <div className="p-2 text-sm text-center text-gray-500">
+                Loading Chats...
+              </div>
+            }
+          >
             <ChatList initialChats={data?.chats} />
           </Suspense>
         )}
@@ -215,5 +217,3 @@ function AppSidebar() {
     </Sidebar>
   );
 }
-
-export default AppSidebar;
