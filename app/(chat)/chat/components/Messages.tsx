@@ -7,6 +7,7 @@ import Pusher from "pusher-js";
 import { ChatMessage } from "@/lib/types";
 import ChatBubble from "./ChatBubble";
 import { Separator } from "@/components/ui/separator";
+import { Loader2 } from "lucide-react";
 
 export default function Messages({
   initialMessages,
@@ -15,7 +16,7 @@ export default function Messages({
   initialMessages: ChatMessage[];
   chatId: string;
 }) {
-  const { data: session } = authClient.useSession();
+  const { data: session, isPending } = authClient.useSession();
   const [messages, setMessages] = useState(initialMessages);
   const scrollRef = useRef<HTMLInputElement>(null);
   useEffect(() => {
@@ -36,6 +37,11 @@ export default function Messages({
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+  if (isPending) {
+    <div className="flex gap-2 justify-center items-center w-full">
+      <Loader2 className="text-gray-500 animate-spin" size="40" />
+    </div>;
+  }
   return (
     <ScrollArea className="p-4 w-full h-full">
       <div className="flex flex-col gap-4 w-full h-full">
