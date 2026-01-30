@@ -80,10 +80,10 @@ export const chatMember = pgTable("chat_member", {
     .$defaultFn(() => crypto.randomUUID()),
   userId: text("user_id")
     .notNull()
-    .references(() => user.id, { onDelete: "cascade" }),
+    .references(() => user.id, { onDelete: "cascade", onUpdate: "cascade" }),
   chatId: text("chat_id")
     .notNull()
-    .references(() => chat.id, { onDelete: "cascade" }),
+    .references(() => chat.id, { onDelete: "cascade", onUpdate: "cascade" }),
 });
 
 export const message = pgTable("message", {
@@ -97,10 +97,10 @@ export const message = pgTable("message", {
     .defaultNow(),
   senderId: text("sender_id")
     .notNull()
-    .references(() => user.id, { onDelete: "cascade" }),
+    .references(() => user.id, { onDelete: "cascade", onUpdate: "cascade" }),
   chatId: text("chat_id")
     .notNull()
-    .references(() => chat.id),
+    .references(() => chat.id, { onDelete: "cascade", onUpdate: "cascade" }),
 });
 
 export const schema = { user, session, account, verification };
