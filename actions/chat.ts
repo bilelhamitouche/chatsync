@@ -3,11 +3,17 @@
 import { createChat, createMessage, deleteChat } from "@/lib/queries";
 import { getUserInfo } from "./auth";
 import Pusher from "pusher";
+import { revalidatePath } from "next/cache";
 
 export async function createChatAction(formData: FormData) {
   const name = formData.get("name") as string;
   const members = formData.get("members") as string;
   const user = await getUserInfo();
+  if (JSON.parse(members).length === 0) {
+    return {
+      message: "Cannot have 0 members",
+    };
+  }
   if (members) {
     try {
       const newMembers = JSON.parse(members);
@@ -21,6 +27,7 @@ export async function createChatAction(formData: FormData) {
       }
     }
   }
+  revalidatePath("/chat");
 }
 
 export async function deleteChatAction(formData: FormData) {
@@ -34,6 +41,7 @@ export async function deleteChatAction(formData: FormData) {
       };
     }
   }
+  revalidatePath("/chat");
 }
 
 export async function createMessageAction(formData: FormData) {

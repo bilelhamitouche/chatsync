@@ -15,7 +15,12 @@ interface ChatItemProps {
   userImage: string | null;
 }
 
-export default function ChatItem({ id, name, userName, userImage }: ChatItemProps) {
+export default function ChatItem({
+  id,
+  name,
+  userName,
+  userImage,
+}: ChatItemProps) {
   const router = useRouter();
   const queryClient = useQueryClient();
   async function deleteChat() {
@@ -23,39 +28,46 @@ export default function ChatItem({ id, name, userName, userImage }: ChatItemProp
     formData.append("id", id);
     try {
       const result = await deleteChatAction(formData);
-      queryClient.invalidateQueries({ queryKey: ["users-chats"] });
-      router.push("/chat");
       if (result?.message) {
         toast.error(result.message);
+      } else {
+        await queryClient.invalidateQueries({ queryKey: ["chats"] });
+        toast.success("Chat deleted successfully");
       }
     } catch (err) {
       toast.error("Error deleting chat");
-      if (err instanceof Error) {
-        toast.error(err.message);
-      }
     }
   }
   return (
     <SidebarMenuItem>
       <SidebarMenuButton asChild>
-        <div role="link" onClick={() => router.push(`/chat/${id}`)} className="flex w-full items-center justify-between cursor-default">
+        <div
+          role="link"
+          onClick={() => router.push(`/chat/${id}`)}
+          className="flex justify-between items-center w-full cursor-default"
+        >
           <div className="flex gap-2 items-center w-full">
             <Avatar>
               <AvatarImage
                 src={userImage as string}
                 alt={`${userName} image`}
               />
-              <AvatarFallback>
-                {userName[0].toUpperCase()}
-              </AvatarFallback>
+              <AvatarFallback>{userName[0].toUpperCase()}</AvatarFallback>
             </Avatar>
             <span>{name}</span>
           </div>
-          <Button variant='ghost' size="icon" onClick={deleteChat}>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={(e) => {
+              e.stopPropagation();
+              deleteChat();
+            }}
+          >
             <Trash color="red" />
           </Button>
         </div>
       </SidebarMenuButton>
     </SidebarMenuItem>
-  )
+  );
 }

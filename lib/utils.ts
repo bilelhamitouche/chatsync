@@ -8,18 +8,27 @@ export function cn(...inputs: ClassValue[]) {
 
 export async function getChats() {
   const response = await fetch("/api/chats");
+  if (!response.ok) {
+    throw new Error("Failed to fetch chats");
+  }
   const chats = await response.json();
   return chats;
 }
 
 export async function getUsers() {
   const response = await fetch("/api/users");
+  if (!response.ok) {
+    throw new Error("Failed to fetch users");
+  }
   const users = await response.json();
   return users;
 }
 
 export async function getChatMessages(chatId: string) {
   const response = await fetch(`/api/${chatId}/messages`);
+  if (!response.ok) {
+    throw new Error("Failed to fetch messages");
+  }
   const messages = await response.json();
   return messages;
 }

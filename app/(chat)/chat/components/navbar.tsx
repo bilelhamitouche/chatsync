@@ -32,29 +32,30 @@ function Navbar({ memberInfo }: NavbarProps) {
           <span>{memberInfo[0].name}</span>
         </div>
       ) : (
-        <div className="flex flex-col">
-          <ul className="flex relative gap-2 items-center h-10">
-            {memberInfo.map((member, index) => (
-              <Tooltip key={member.id}>
-                <TooltipTrigger>
-                  <Avatar
-                    className="absolute top-0"
-                    style={{
-                      zIndex: memberInfo.length - index,
-                      transform: `translateX(${index * 12}px)`,
-                    }}
-                  >
-                    <AvatarImage src={member.imageUrl as string} />
-                    <AvatarFallback className="border border-gray-700">
-                      {member.name?.toUpperCase()[0]}
-                    </AvatarFallback>
-                  </Avatar>
-                </TooltipTrigger>
-                <TooltipContent>{member.name}</TooltipContent>
-              </Tooltip>
-            ))}
+        <div className="flex flex-col justify-center">
+          <ul className="flex relative gap-2 items-center">
+            {memberInfo.length > 1 &&
+              memberInfo.map((member, index) => (
+                <Tooltip key={member.id}>
+                  <TooltipTrigger>
+                    <Avatar
+                      className="absolute top-0"
+                      style={{
+                        zIndex: memberInfo.length - index,
+                        transform: `translateX(${index * 12}px)`,
+                      }}
+                    >
+                      <AvatarImage src={member.imageUrl as string} />
+                      <AvatarFallback className="border border-gray-700">
+                        {member.name?.toUpperCase()[0]}
+                      </AvatarFallback>
+                    </Avatar>
+                  </TooltipTrigger>
+                  <TooltipContent>{member.name}</TooltipContent>
+                </Tooltip>
+              ))}
           </ul>
-          <p className="flex gap-1 items-center text-sm text-gray-500">
+          <p className="flex text-sm text-gray-500">
             {memberInfo.length} Members
           </p>
         </div>

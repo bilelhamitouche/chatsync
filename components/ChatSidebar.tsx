@@ -23,7 +23,7 @@ import {
 import { createChatAction } from "@/actions/chat";
 import MultipleSelector from "./ui/multiple-selector";
 import Link from "next/link";
-import { LogOut, Settings } from "lucide-react";
+import { Loader2, LogOut, Settings } from "lucide-react";
 import { Input } from "./ui/input";
 import {
   DropdownMenu,
@@ -37,7 +37,7 @@ import { authClient } from "@/lib/auth-client";
 import { Suspense, useEffect, useRef, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { getUsersAndChats } from "@/lib/utils";
+import { getUsers } from "@/lib/utils";
 import ChatList from "@/app/(chat)/chat/components/ChatList";
 import { User } from "@/lib/types";
 import AvatarDropdownSkeleton from "./AvatarDropdownSkeleton";
@@ -53,15 +53,19 @@ export default function ChatSidebar() {
   const [selectedValues, setSelectedValues] = useState<Option[]>([]);
   const hiddenInputRef = useRef<HTMLInputElement>(null);
   const queryClient = useQueryClient();
-  const { data, isError, isLoading } = useQuery({
-    queryKey: ["users-chats"],
-    queryFn: getUsersAndChats,
+  const {
+    data: users,
+    isError,
+    isLoading,
+  } = useQuery({
+    queryKey: ["users"],
+    queryFn: getUsers,
   });
 
   if (isError) toast.error("Cannot fetch users");
   let userOptions: Option[] = [];
-  if (data?.users != null) {
-    const filteredUsers = data.users?.filter(
+  if (users != null) {
+    const filteredUsers = users?.filter(
       (user: User) => user.id !== userInfo?.id,
     );
     userOptions = filteredUsers?.map((user: User) => ({
@@ -106,8 +110,11 @@ export default function ChatSidebar() {
                 e.preventDefault();
                 const formData = new FormData(e.currentTarget);
                 try {
-                  await createChatAction(formData);
-                  queryClient.invalidateQueries({ queryKey: ["users-chats"] });
+                  const result = await createChatAction(formData);
+                  if (result?.message) {
+                    toast.error(result.message);
+                  }
+                  await queryClient.invalidateQueries({ queryKey: ["chats"] });
                   toast.success("Chat created successfully");
                 } catch (err) {
                   if (err !== null) {
@@ -136,6 +143,11 @@ export default function ChatSidebar() {
                     placeholder="Choose members"
                     emptyIndicator={
                       <p className="text-gray-500">Nothing selected</p>
+                    }
+                    loadingIndicator={
+                      <div className="flex justify-center items-center text-gray-500">
+                        <Loader2 className="animate-spin" />
+                      </div>
                     }
                   />
                   <input type="hidden" name="members" ref={hiddenInputRef} />
@@ -174,7 +186,7 @@ export default function ChatSidebar() {
               </div>
             }
           >
-            <ChatList initialChats={data?.chats} />
+            <ChatList />
           </Suspense>
         )}
       </SidebarContent>
