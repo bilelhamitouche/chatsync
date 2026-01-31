@@ -35,6 +35,9 @@ export default function ChatItem({
         toast.success("Chat deleted successfully");
       }
     } catch (err) {
+      if (err instanceof Error) {
+        toast.error(err.message);
+      }
       toast.error("Error deleting chat");
     }
   }
