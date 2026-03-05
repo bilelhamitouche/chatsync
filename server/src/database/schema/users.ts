@@ -5,11 +5,12 @@ import { userRole } from './enums';
 import { uuid } from 'drizzle-orm/pg-core';
 
 export const users = pgTable('users', {
-  id: uuid('id').primaryKey(),
+  id: uuid('id').primaryKey().defaultRandom(),
   name: text('name').notNull(),
   email: text('email').notNull().unique(),
   avatar: text('avatar'),
   role: userRole('role').notNull().default('User'),
+  password: text('password').notNull(),
   refreshToken: text('refresh_token'),
   createdAt: timestamp('created_at', { withTimezone: true })
     .notNull()

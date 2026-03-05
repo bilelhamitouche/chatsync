@@ -8,10 +8,10 @@ import { JwtModule } from '@nestjs/jwt';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
+    JwtModule.register({ global: true }),
     DatabaseModule,
     UsersModule,
     AuthModule,
-    JwtModule,
   ],
   providers: [],
 })
