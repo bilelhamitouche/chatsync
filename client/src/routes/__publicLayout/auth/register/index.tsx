@@ -11,21 +11,22 @@ import {
 } from "@chakra-ui/react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useForm } from "@tanstack/react-form";
-import { loginSchema } from "@/lib/zod";
+import { registerSchema } from "@/lib/zod";
 
-export const Route = createFileRoute("/__publicLayout/auth/login/")({
+export const Route = createFileRoute("/__publicLayout/auth/register/")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
   const form = useForm({
     defaultValues: {
+      name: "",
       email: "",
       password: "",
     },
     validators: {
-      onBlur: loginSchema,
-      onSubmit: loginSchema,
+      onBlur: registerSchema,
+      onSubmit: registerSchema,
     },
     onSubmit: async ({ value }) => {
       console.log(value);
@@ -50,13 +51,32 @@ function RouteComponent() {
           }}
         >
           <Card.Header gap="1">
-            <Card.Title>Welcome to ChatSync</Card.Title>
+            <Card.Title>Create an account</Card.Title>
             <Card.Description>
-              Enter your credentials to login to your account
+              Please fill in the form to create an account
             </Card.Description>
           </Card.Header>
           <Card.Body>
             <Stack gap="4" width="full">
+              <form.Field
+                name="name"
+                children={(field) => (
+                  <Field.Root invalid={!field.state.meta.isValid}>
+                    <Field.Label>Name</Field.Label>
+                    <Input
+                      value={field.state.value}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      onBlur={field.handleBlur}
+                      placeholder="Your Name"
+                    />
+                    {field.state.meta.isTouched && (
+                      <Field.ErrorText>
+                        {field.state.meta.errors[0]?.message}
+                      </Field.ErrorText>
+                    )}
+                  </Field.Root>
+                )}
+              />
               <form.Field
                 name="email"
                 children={(field) => (
@@ -100,12 +120,12 @@ function RouteComponent() {
           </Card.Body>
           <Card.Footer display="flex" flexDirection="column">
             <Button width="full" type="submit">
-              Login
+              Register
             </Button>
             <Flex gap="2" fontSize="sm">
-              <Text>Don&apos;t have an account?</Text>
+              <Text>Already have an account?</Text>
               <ChakraLink asChild>
-                <Link to="/auth/register">Register!</Link>
+                <Link to="/auth/login">Login!</Link>
               </ChakraLink>
             </Flex>
           </Card.Footer>

@@ -9,14 +9,21 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
+import { Route as _publicLayoutIndexRouteImport } from './routes/__publicLayout/index'
+import { Route as _publicLayoutAuthRegisterIndexRouteImport } from './routes/__publicLayout/auth/register/index'
 import { Route as _publicLayoutAuthLoginIndexRouteImport } from './routes/__publicLayout/auth/login/index'
 
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
+const _publicLayoutIndexRoute = _publicLayoutIndexRouteImport.update({
+  id: '/__publicLayout/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const _publicLayoutAuthRegisterIndexRoute =
+  _publicLayoutAuthRegisterIndexRouteImport.update({
+    id: '/__publicLayout/auth/register/',
+    path: '/auth/register/',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const _publicLayoutAuthLoginIndexRoute =
   _publicLayoutAuthLoginIndexRouteImport.update({
     id: '/__publicLayout/auth/login/',
@@ -25,38 +32,53 @@ const _publicLayoutAuthLoginIndexRoute =
   } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
+  '/': typeof _publicLayoutIndexRoute
   '/auth/login/': typeof _publicLayoutAuthLoginIndexRoute
+  '/auth/register/': typeof _publicLayoutAuthRegisterIndexRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
+  '/': typeof _publicLayoutIndexRoute
   '/auth/login': typeof _publicLayoutAuthLoginIndexRoute
+  '/auth/register': typeof _publicLayoutAuthRegisterIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
+  '/__publicLayout/': typeof _publicLayoutIndexRoute
   '/__publicLayout/auth/login/': typeof _publicLayoutAuthLoginIndexRoute
+  '/__publicLayout/auth/register/': typeof _publicLayoutAuthRegisterIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth/login/'
+  fullPaths: '/' | '/auth/login/' | '/auth/register/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth/login'
-  id: '__root__' | '/' | '/__publicLayout/auth/login/'
+  to: '/' | '/auth/login' | '/auth/register'
+  id:
+    | '__root__'
+    | '/__publicLayout/'
+    | '/__publicLayout/auth/login/'
+    | '/__publicLayout/auth/register/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
+  _publicLayoutIndexRoute: typeof _publicLayoutIndexRoute
   _publicLayoutAuthLoginIndexRoute: typeof _publicLayoutAuthLoginIndexRoute
+  _publicLayoutAuthRegisterIndexRoute: typeof _publicLayoutAuthRegisterIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
+    '/__publicLayout/': {
+      id: '/__publicLayout/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+      preLoaderRoute: typeof _publicLayoutIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/__publicLayout/auth/register/': {
+      id: '/__publicLayout/auth/register/'
+      path: '/auth/register'
+      fullPath: '/auth/register/'
+      preLoaderRoute: typeof _publicLayoutAuthRegisterIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/__publicLayout/auth/login/': {
@@ -70,8 +92,9 @@ declare module '@tanstack/react-router' {
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
+  _publicLayoutIndexRoute: _publicLayoutIndexRoute,
   _publicLayoutAuthLoginIndexRoute: _publicLayoutAuthLoginIndexRoute,
+  _publicLayoutAuthRegisterIndexRoute: _publicLayoutAuthRegisterIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
