@@ -1,4 +1,4 @@
-import { Button } from "@chakra-ui/react";
+import { Box, Button } from "@chakra-ui/react";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/")({
@@ -7,8 +7,8 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   return (
-    <div className="p-2">
+    <Box p={4}>
       <Button>Hello World</Button>
-    </div>
+    </Box>
   );
 }
