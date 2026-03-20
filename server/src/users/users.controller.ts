@@ -32,6 +32,12 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
+  @Get('members')
+  @HttpCode(HttpStatus.OK)
+  async findMembers() {
+    return this.usersService.findMembers();
+  }
+
   @UseGuards(JwtAuthGuard)
   @Get(':id')
   @HttpCode(HttpStatus.OK)

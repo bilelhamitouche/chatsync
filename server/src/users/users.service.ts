@@ -23,7 +23,27 @@ export class UsersService {
   }
 
   async findAll() {
-    return this.database.select().from(schema.users);
+    return this.database
+      .select({
+        id: schema.users.id,
+        name: schema.users.name,
+        email: schema.users.email,
+        avatar: schema.users.avatar,
+        role: schema.users.role,
+        createdAt: schema.users.createdAt,
+        updatedAt: schema.users.updatedAt,
+      })
+      .from(schema.users);
+  }
+
+  async findMembers() {
+    return this.database
+      .select({
+        id: schema.users.id,
+        name: schema.users.name,
+        avatar: schema.users.avatar,
+      })
+      .from(schema.users);
   }
 
   async findById(id: string) {
