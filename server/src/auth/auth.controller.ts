@@ -1,4 +1,14 @@
-import { Body, Controller, Post, Res, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Res,
+  UnauthorizedException,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import type { Response } from 'express';
@@ -70,5 +80,14 @@ export class AuthController {
       secure: this.configService.get('NODE_ENV') === 'production',
       expires: new Date(Date.now() + Number(tokens.expiresRefreshToken)),
     });
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('me')
+  @HttpCode(HttpStatus.OK)
+  async getCurrentUser(@CurrentUser() user: typeof schema.users.$inferSelect) {
+    if (!user) throw new UnauthorizedException();
+    const { password, refreshToken, ...safeUser } = user;
+    return safeUser;
   }
 }
