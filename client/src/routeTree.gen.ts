@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as _authLayoutRouteImport } from './routes/__authLayout'
 import { Route as _publicLayoutIndexRouteImport } from './routes/__publicLayout/index'
 import { Route as _authLayoutChatsRouteImport } from './routes/__authLayout/chats'
 import { Route as _authLayoutSettingsIndexRouteImport } from './routes/__authLayout/settings/index'
@@ -17,21 +18,25 @@ import { Route as _publicLayoutAuthRegisterIndexRouteImport } from './routes/__p
 import { Route as _publicLayoutAuthLoginIndexRouteImport } from './routes/__publicLayout/auth/login/index'
 import { Route as _authLayoutChatsChatIdIndexRouteImport } from './routes/__authLayout/chats/$chatId/index'
 
+const _authLayoutRoute = _authLayoutRouteImport.update({
+  id: '/__authLayout',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const _publicLayoutIndexRoute = _publicLayoutIndexRouteImport.update({
   id: '/__publicLayout/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const _authLayoutChatsRoute = _authLayoutChatsRouteImport.update({
-  id: '/__authLayout/chats',
+  id: '/chats',
   path: '/chats',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => _authLayoutRoute,
 } as any)
 const _authLayoutSettingsIndexRoute =
   _authLayoutSettingsIndexRouteImport.update({
-    id: '/__authLayout/settings/',
+    id: '/settings/',
     path: '/settings/',
-    getParentRoute: () => rootRouteImport,
+    getParentRoute: () => _authLayoutRoute,
   } as any)
 const _authLayoutChatsIndexRoute = _authLayoutChatsIndexRouteImport.update({
   id: '/',
@@ -58,8 +63,8 @@ const _authLayoutChatsChatIdIndexRoute =
   } as any)
 
 export interface FileRoutesByFullPath {
-  '/chats': typeof _authLayoutChatsRouteWithChildren
   '/': typeof _publicLayoutIndexRoute
+  '/chats': typeof _authLayoutChatsRouteWithChildren
   '/chats/': typeof _authLayoutChatsIndexRoute
   '/settings/': typeof _authLayoutSettingsIndexRoute
   '/chats/$chatId/': typeof _authLayoutChatsChatIdIndexRoute
@@ -76,6 +81,7 @@ export interface FileRoutesByTo {
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/__authLayout': typeof _authLayoutRouteWithChildren
   '/__authLayout/chats': typeof _authLayoutChatsRouteWithChildren
   '/__publicLayout/': typeof _publicLayoutIndexRoute
   '/__authLayout/chats/': typeof _authLayoutChatsIndexRoute
@@ -87,8 +93,8 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | '/chats'
     | '/'
+    | '/chats'
     | '/chats/'
     | '/settings/'
     | '/chats/$chatId/'
@@ -104,6 +110,7 @@ export interface FileRouteTypes {
     | '/auth/register'
   id:
     | '__root__'
+    | '/__authLayout'
     | '/__authLayout/chats'
     | '/__publicLayout/'
     | '/__authLayout/chats/'
@@ -114,15 +121,21 @@ export interface FileRouteTypes {
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  _authLayoutChatsRoute: typeof _authLayoutChatsRouteWithChildren
+  _authLayoutRoute: typeof _authLayoutRouteWithChildren
   _publicLayoutIndexRoute: typeof _publicLayoutIndexRoute
-  _authLayoutSettingsIndexRoute: typeof _authLayoutSettingsIndexRoute
   _publicLayoutAuthLoginIndexRoute: typeof _publicLayoutAuthLoginIndexRoute
   _publicLayoutAuthRegisterIndexRoute: typeof _publicLayoutAuthRegisterIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/__authLayout': {
+      id: '/__authLayout'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof _authLayoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/__publicLayout/': {
       id: '/__publicLayout/'
       path: '/'
@@ -135,14 +148,14 @@ declare module '@tanstack/react-router' {
       path: '/chats'
       fullPath: '/chats'
       preLoaderRoute: typeof _authLayoutChatsRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof _authLayoutRoute
     }
     '/__authLayout/settings/': {
       id: '/__authLayout/settings/'
       path: '/settings'
       fullPath: '/settings/'
       preLoaderRoute: typeof _authLayoutSettingsIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof _authLayoutRoute
     }
     '/__authLayout/chats/': {
       id: '/__authLayout/chats/'
@@ -188,10 +201,23 @@ const _authLayoutChatsRouteChildren: _authLayoutChatsRouteChildren = {
 const _authLayoutChatsRouteWithChildren =
   _authLayoutChatsRoute._addFileChildren(_authLayoutChatsRouteChildren)
 
-const rootRouteChildren: RootRouteChildren = {
+interface _authLayoutRouteChildren {
+  _authLayoutChatsRoute: typeof _authLayoutChatsRouteWithChildren
+  _authLayoutSettingsIndexRoute: typeof _authLayoutSettingsIndexRoute
+}
+
+const _authLayoutRouteChildren: _authLayoutRouteChildren = {
   _authLayoutChatsRoute: _authLayoutChatsRouteWithChildren,
-  _publicLayoutIndexRoute: _publicLayoutIndexRoute,
   _authLayoutSettingsIndexRoute: _authLayoutSettingsIndexRoute,
+}
+
+const _authLayoutRouteWithChildren = _authLayoutRoute._addFileChildren(
+  _authLayoutRouteChildren,
+)
+
+const rootRouteChildren: RootRouteChildren = {
+  _authLayoutRoute: _authLayoutRouteWithChildren,
+  _publicLayoutIndexRoute: _publicLayoutIndexRoute,
   _publicLayoutAuthLoginIndexRoute: _publicLayoutAuthLoginIndexRoute,
   _publicLayoutAuthRegisterIndexRoute: _publicLayoutAuthRegisterIndexRoute,
 }
