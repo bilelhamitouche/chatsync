@@ -59,8 +59,13 @@ export class AuthController {
 
   @UseGuards(JwtAuthGuard)
   @Post('logout')
-  async logout(@CurrentUser() user: typeof schema.users.$inferSelect) {
+  async logout(
+    @CurrentUser() user: typeof schema.users.$inferSelect,
+    @Res({ passthrough: true }) response: Response,
+  ) {
     await this.authService.logout(user.id);
+    response.clearCookie('Authentication');
+    response.clearCookie('Refresh');
   }
 
   @UseGuards(JwtRefreshAuthGuard)
