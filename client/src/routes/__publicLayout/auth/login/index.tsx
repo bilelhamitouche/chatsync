@@ -9,15 +9,19 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useForm } from "@tanstack/react-form";
 import { loginSchema } from "@/lib/zod";
+import { useLoginMutation } from "@/api/mutations/auth";
+import { toaster } from "@/components/ui/toaster";
 
 export const Route = createFileRoute("/__publicLayout/auth/login/")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
+  const navigate = useNavigate();
+  const login = useLoginMutation();
   const form = useForm({
     defaultValues: {
       email: "",
@@ -28,7 +32,17 @@ function RouteComponent() {
       onSubmit: loginSchema,
     },
     onSubmit: async ({ value }) => {
-      console.log(value);
+      await login.mutateAsync(value);
+      if (!login.isError) {
+        navigate({ to: "/chats" });
+      } else {
+        toaster.create({
+          title: login.error.name,
+          description: login.error.message,
+          type: "error",
+          closable: true,
+        });
+      }
     },
   });
   return (
