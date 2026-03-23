@@ -5,7 +5,7 @@ export const currentUserOptions = () =>
   queryOptions({
     queryKey: ["currentuser"],
     queryFn: async () => {
-      const res = await apiFetch("/api/auth/me");
-      return res;
+      const user = await apiFetch("/api/auth/me");
+      return user;
     },
   });

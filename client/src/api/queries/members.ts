@@ -5,7 +5,7 @@ export const membersQueryOptions = () =>
   queryOptions({
     queryKey: ["members"],
     queryFn: async () => {
-      const res = await apiFetch("/api/users/members");
-      return res;
+      const members = await apiFetch("/api/users/members");
+      return members;
     },
   });
