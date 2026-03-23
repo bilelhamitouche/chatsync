@@ -18,7 +18,7 @@ export const apiFetch = async (path: string, options?: RequestInit) => {
         ...options,
       });
     } else {
-      throw new Error("nauthenticated");
+      throw new Error("Unauthenticated");
     }
   }
 
