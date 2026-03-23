@@ -1,4 +1,5 @@
 import { queryClient, router } from "@/lib/router";
+import { socket } from "@/lib/socket";
 import type { LoginData, RegisterData } from "@/lib/types";
 import { apiFetch } from "@/utils/apiFetch";
 import { useMutation } from "@tanstack/react-query";
@@ -15,6 +16,10 @@ export const useLoginMutation = () =>
     onError: (error) => {
       throw new Error(error.message);
     },
+    onSuccess: () => {
+      socket.connect();
+      router.navigate({ to: "/chats" });
+    },
   });
 
 export const useRegisterMutation = () =>
@@ -29,6 +34,10 @@ export const useRegisterMutation = () =>
     onError: (error) => {
       throw new Error(error.message);
     },
+    onSuccess: () => {
+      socket.connect();
+      router.navigate({ to: "/chats" });
+    },
   });
 
 export const useLogoutMutation = () =>
@@ -42,6 +51,7 @@ export const useLogoutMutation = () =>
       throw new Error(error.message);
     },
     onSuccess: () => {
+      socket.disconnect();
       queryClient.clear();
       router.navigate({ to: "/auth/login" });
     },
