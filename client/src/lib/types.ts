@@ -30,8 +30,15 @@ export interface RegisterData {
 export interface CreateGroupData {
   name: string;
   members: string[];
+  isGroup: boolean;
 }
 
 export interface CreateDmData {
-  member: string;
+  members: string[];
+  isGroup: boolean;
+}
+
+export interface createMessageData {
+  content: string;
+  chatId: string;
 }

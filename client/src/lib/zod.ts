@@ -18,14 +18,21 @@ export const registerSchema = z.object({
 });
 
 export const createDmSchema = z.object({
-  member: z
-    .array(z.string())
-    .min(1, { error: "Direct message needs two members" }),
+  members: z
+    .array(z.string().trim())
+    .max(1, { error: "Direct message needs two members" }),
 });
 
 export const createGroupSchema = z.object({
   name: z.string().trim().min(1, { error: "Group needs a name" }),
   members: z
-    .array(z.string())
+    .array(z.string().trim())
     .min(1, { error: "Group needs at least 2 members" }),
+});
+
+export const createMessageSchema = z.object({
+  content: z
+    .string()
+    .trim()
+    .refine((value) => value.split(" ").length < 500),
 });
