@@ -3,7 +3,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import * as schema from '../database/schema';
 import { DATABASE_CONNECTION } from 'src/database/database-connection';
-import { eq } from 'drizzle-orm';
+import { eq, not } from 'drizzle-orm';
 import { UpdateUserDto } from './dto/update-user.dto';
 import bcrypt from 'bcrypt';
 
@@ -36,21 +36,22 @@ export class UsersService {
       .from(schema.users);
   }
 
-  async findMembers() {
+  async findMembers(currentUserId: string) {
     return this.database
       .select({
         id: schema.users.id,
         name: schema.users.name,
         avatar: schema.users.avatar,
       })
-      .from(schema.users);
+      .from(schema.users)
+      .where(eq(schema.users.id, currentUserId));
   }
 
   async findById(id: string) {
     const user = await this.database
       .select()
       .from(schema.users)
-      .where(eq(schema.users.id, id));
+      .where(not(eq(schema.users.id, id)));
     return user[0];
   }
 

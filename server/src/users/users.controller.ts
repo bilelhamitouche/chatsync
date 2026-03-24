@@ -14,6 +14,8 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { CurrentUser } from 'src/common/decorators/current-user.decorator';
+import * as schema from '../database/schema';
 
 @Controller('users')
 export class UsersController {
@@ -32,10 +34,11 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('members')
   @HttpCode(HttpStatus.OK)
-  async findMembers() {
-    return this.usersService.findMembers();
+  async findMembers(@CurrentUser() user: typeof schema.users.$inferSelect) {
+    return this.usersService.findMembers(user.id);
   }
 
   @UseGuards(JwtAuthGuard)

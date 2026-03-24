@@ -13,11 +13,22 @@ export class ChatsService {
     private readonly database: NodePgDatabase<typeof schema>,
   ) {}
 
-  async create(createChatDto: CreateChatDto) {
+  async create(createChatDto: CreateChatDto, adminId: string) {
     const chat = await this.database
       .insert(schema.chats)
       .values(createChatDto)
       .returning();
+    const chatMembers = createChatDto.members.map((member) => ({
+      memberId: member,
+      chatId: chat[0].id,
+      isAdmin: false,
+    }));
+    await this.database
+      .insert(schema.chatMembers)
+      .values([
+        ...chatMembers,
+        { memberId: adminId, chatId: chat[0].id, isAdmin: true },
+      ]);
     return chat[0];
   }
 
@@ -46,6 +57,10 @@ export class ChatsService {
     const chat = await this.database
       .select()
       .from(schema.chats)
+      .leftJoin(
+        schema.chatMembers,
+        eq(schema.users.id, schema.chatMembers.memberId),
+      )
       .where(eq(schema.chats.id, id));
     return chat[0];
   }

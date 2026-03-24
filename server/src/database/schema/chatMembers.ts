@@ -12,7 +12,7 @@ export const chatMembers = pgTable('chat_members', {
   chatId: uuid('chat_id')
     .notNull()
     .references(() => chats.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
-  isAdmin: boolean('is_admin'),
+  isAdmin: boolean('is_admin').default(false),
   joinedAt: timestamp('joined_at', { withTimezone: true })
     .notNull()
     .defaultNow(),

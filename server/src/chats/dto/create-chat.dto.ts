@@ -1,4 +1,10 @@
-import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsBoolean,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class CreateChatDto {
   @IsOptional()
@@ -8,4 +14,8 @@ export class CreateChatDto {
   @IsNotEmpty()
   @IsBoolean()
   isGroup: boolean;
+
+  @IsNotEmpty()
+  @IsArray()
+  members: string[];
 }
