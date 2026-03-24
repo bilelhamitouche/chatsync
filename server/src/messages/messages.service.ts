@@ -13,14 +13,12 @@ export class MessagesService {
     private readonly database: NodePgDatabase<typeof schema>,
   ) {}
 
-  async create(
-    senderId: string,
-    chatId: string,
-    createMessageDto: CreateMessageDto,
-  ) {
-    return this.database
+  async create(senderId: string, createMessageDto: CreateMessageDto) {
+    const user = await this.database
       .insert(schema.messages)
-      .values({ senderId, chatId, ...createMessageDto });
+      .values({ senderId, ...createMessageDto })
+      .returning();
+    return user[0];
   }
 
   async findAll() {
@@ -28,21 +26,24 @@ export class MessagesService {
   }
 
   async findById(id: string) {
-    return this.database
+    const user = await this.database
       .selectDistinct()
       .from(schema.messages)
       .where(eq(schema.messages.id, id));
+    return user[0];
   }
 
   async update(id: string, updateMessageDto: UpdateMessageDto) {
-    return this.database
+    const updatedUser = await this.database
       .update(schema.messages)
       .set(updateMessageDto)
-      .where(eq(schema.messages.id, id));
+      .where(eq(schema.messages.id, id))
+      .returning();
+    return updatedUser[0];
   }
 
   async remove(id: string) {
-    return this.database
+    await this.database
       .delete(schema.messages)
       .where(eq(schema.messages.id, id));
   }
