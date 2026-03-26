@@ -51,7 +51,7 @@ export class UsersService {
     const user = await this.database
       .select()
       .from(schema.users)
-      .where(not(eq(schema.users.id, id)));
+      .where(eq(schema.users.id, id));
     return user[0];
   }
 
