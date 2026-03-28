@@ -11,6 +11,7 @@ import {
 import { useForm } from "@tanstack/react-form";
 import { type Dispatch, type SetStateAction } from "react";
 import MultiSelect from "./multiselect";
+import { useCreateGroupMutation } from "@/api/mutations/chats";
 
 interface CreateGroupDialog {
   isDialogOpen: boolean;
@@ -21,6 +22,7 @@ export default function CreateGroupDialog({
   isDialogOpen,
   setIsDialogOpen,
 }: CreateGroupDialog) {
+  const groupChat = useCreateGroupMutation();
   const form = useForm({
     defaultValues: {
       name: "",
@@ -30,7 +32,13 @@ export default function CreateGroupDialog({
       onBlur: createGroupSchema,
       onSubmit: createGroupSchema,
     },
-    onSubmit: ({ value }) => {},
+    onSubmit: async ({ value }) => {
+      await groupChat.mutateAsync({
+        members: value.members,
+        name: value.name,
+        isGroup: true,
+      });
+    },
   });
   return (
     <Dialog.Root
@@ -92,7 +100,15 @@ export default function CreateGroupDialog({
               <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
                 Cancel
               </Button>
-              <Button form="create-group-form" type="submit">
+              <Button
+                form="create-group-form"
+                type="submit"
+                onClick={() => {
+                  if (!groupChat.isError) {
+                    setIsDialogOpen(false);
+                  }
+                }}
+              >
                 Create
               </Button>
             </Dialog.Footer>

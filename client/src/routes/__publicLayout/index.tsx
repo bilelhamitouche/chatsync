@@ -1,3 +1,4 @@
+import { Box, Heading } from "@chakra-ui/react";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/__publicLayout/")({
@@ -6,8 +7,8 @@ export const Route = createFileRoute("/__publicLayout/")({
 
 function Index() {
   return (
-    <div>
-      <h3>Welcome Home!</h3>
-    </div>
+    <Box p="4">
+      <Heading size="md">Welcome Home</Heading>
+    </Box>
   );
 }

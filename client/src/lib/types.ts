@@ -16,6 +16,18 @@ export interface Member {
   updatedAt: Date;
 }
 
+export interface Message {
+  id: string;
+  content: string | null;
+  imageUrl: string | null;
+  chatId: string;
+  senderId: string;
+  senderName: string;
+  senderAvatar: string;
+  sentAt: Date;
+  updatedAt: Date;
+}
+
 export interface LoginData {
   email: string;
   password: string;

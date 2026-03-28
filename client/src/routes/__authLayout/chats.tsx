@@ -8,7 +8,7 @@ export const Route = createFileRoute("/__authLayout/chats")({
 
 function RouteComponent() {
   return (
-    <Flex w="full" h="dvh">
+    <Flex w="full" h="dvh" overflow="hidden">
       <Sidebar />
       <Outlet />
     </Flex>

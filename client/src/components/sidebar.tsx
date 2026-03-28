@@ -15,6 +15,7 @@ import CreateGroupDialog from "./create-group-dialog";
 import CreateDmDialog from "./create-dm-dialog";
 import AvatarDropdown from "./avatar-dropdown";
 import AvatarDropdownSkeleton from "./avatar-dropdown-skeleton";
+import ChatsList from "./chats-list";
 
 export default function Sidebar() {
   const [DmOpen, setDmOpen] = useState(false);
@@ -23,6 +24,8 @@ export default function Sidebar() {
     <Stack
       p="4"
       w="sm"
+      flexShrink="0"
+      h="dvh"
       shadow="sm"
       transform={{ base: "translateX(-100%)", md: "translateX(0)" }}
       transition="transform"
@@ -66,7 +69,9 @@ export default function Sidebar() {
           setIsDialogOpen={setGroupOpen}
         />
       </Flex>
-      <Stack h="full"></Stack>
+      <Suspense fallback={<div>Loading chats...</div>}>
+        <ChatsList />
+      </Suspense>
       <Separator />
       <Suspense fallback={<AvatarDropdownSkeleton />}>
         <AvatarDropdown />

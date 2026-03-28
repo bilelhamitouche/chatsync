@@ -1,5 +1,6 @@
 import { createDmSchema } from "@/lib/zod";
 import {
+  Avatar,
   Button,
   CloseButton,
   Dialog,
@@ -10,9 +11,11 @@ import {
   useListCollection,
 } from "@chakra-ui/react";
 import { useForm } from "@tanstack/react-form";
-import { type Dispatch, type SetStateAction } from "react";
+import { useEffect, type Dispatch, type SetStateAction } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { membersQueryOptions } from "@/api/queries/members";
+import { useCreateDmMutation } from "@/api/mutations/chats";
+import { formatAvatarName } from "@/utils/formatAvatarName";
 
 interface CreateDmDialog {
   isDialogOpen: boolean;
@@ -23,16 +26,17 @@ export default function CreateDmDialog({
   isDialogOpen,
   setIsDialogOpen,
 }: CreateDmDialog) {
+  const dmChat = useCreateDmMutation();
   const form = useForm({
     defaultValues: {
-      member: [] as string[],
+      members: [] as string[],
     },
     validators: {
       onBlur: createDmSchema,
       onSubmit: createDmSchema,
     },
-    onSubmit: ({ value }) => {
-      console.log(value);
+    onSubmit: async ({ value }) => {
+      await dmChat.mutateAsync({ members: value.members, isGroup: false });
     },
   });
   const { data, isPending } = useQuery(membersQueryOptions());
@@ -42,6 +46,9 @@ export default function CreateDmDialog({
     itemToString: (item) => item.name,
     itemToValue: (item) => item.id,
   });
+  useEffect(() => {
+    if (data) collection.setItems(data);
+  }, [data]);
   return (
     <Dialog.Root
       size="sm"
@@ -61,20 +68,20 @@ export default function CreateDmDialog({
             <Dialog.Body>
               <Stack gap="4" width="full" asChild>
                 <form
-                  id="create-group-form"
+                  id="create-dm-form"
                   onSubmit={(e) => {
                     e.preventDefault();
                     form.handleSubmit();
                   }}
                 >
                   <form.Field
-                    name="member"
+                    name="members"
                     children={(field) => (
                       <Field.Root>
                         <Field.Label>Member</Field.Label>
                         <Select.Root
                           closeOnSelect
-                          disabled={isPending}
+                          disabled={isPending || dmChat.isPending}
                           collection={collection}
                           value={field.state.value}
                           onValueChange={(e) => field.handleChange(e.value)}
@@ -91,9 +98,22 @@ export default function CreateDmDialog({
                           <Portal>
                             <Select.Positioner>
                               <Select.Content>
-                                {data.map((item: any) => (
-                                  <Select.Item item={item} key={item.id}>
-                                    {item.name}
+                                {data.map((member: any) => (
+                                  <Select.Item
+                                    justifyContent="flex-start"
+                                    item={member}
+                                    key={member.id}
+                                  >
+                                    <Avatar.Root size="xs">
+                                      <Avatar.Image
+                                        src={member.avatar}
+                                        alt={`${member.name} image`}
+                                      />
+                                      <Avatar.Fallback>
+                                        {formatAvatarName(member.name)}
+                                      </Avatar.Fallback>
+                                    </Avatar.Root>
+                                    {member.name}
                                     <Select.ItemIndicator />
                                   </Select.Item>
                                 ))}
@@ -111,7 +131,16 @@ export default function CreateDmDialog({
               <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
                 Cancel
               </Button>
-              <Button form="create-group-form" type="submit">
+              <Button
+                form="create-dm-form"
+                disabled={isPending || dmChat.isPending}
+                type="submit"
+                onClick={() => {
+                  if (!dmChat.isError) {
+                    setIsDialogOpen(false);
+                  }
+                }}
+              >
                 Create
               </Button>
             </Dialog.Footer>
