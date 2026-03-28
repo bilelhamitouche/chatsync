@@ -1,19 +1,28 @@
-import { ExecutionContext, Injectable } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
-import { Socket } from 'socket.io';
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
-export class WsJwtAuthGuard extends AuthGuard('jwt') {
-  getRequest(context: ExecutionContext) {
-    const client: Socket = context.switchToWs().getClient();
-    const token = client.handshake.headers.cookie
+export class WsJwtAuthGuard implements CanActivate {
+  constructor(
+    private jwtService: JwtService,
+    private configService: ConfigService,
+  ) {}
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    const client = context.switchToWs().getClient();
+    const cookie = client.handshake.headers.cookie
       ?.split(';')
-      .find((c) => c.trim().startsWith('Authentication='))
+      .find((c: string) => c.trim().startsWith('Authentication='))
       ?.split('=')[1];
-    return {
-      cookies: {
-        Authentication: token,
-      },
-    };
+    if (!cookie) return false;
+    try {
+      const payload = await this.jwtService.verifyAsync(cookie, {
+        secret: this.configService.getOrThrow('JWT_ACCESS_TOKEN_SECRET'),
+      });
+      client.data.user = payload;
+      return true;
+    } catch (err) {
+      return false;
+    }
   }
 }

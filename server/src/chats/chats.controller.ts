@@ -37,8 +37,11 @@ export class ChatsController {
   @UseGuards(JwtAuthGuard)
   @Get()
   @HttpCode(HttpStatus.OK)
-  async findAll(@Query('search') search: string) {
-    return this.chatsService.findAll(search);
+  async findAll(
+    @CurrentUser() user: typeof schema.users.$inferSelect,
+    @Query('search') search: string,
+  ) {
+    return this.chatsService.findAll(user.id, search);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -50,6 +53,13 @@ export class ChatsController {
       throw new NotFoundException();
     }
     return chat;
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get(':id/messages')
+  @HttpCode(HttpStatus.OK)
+  async findChatMessages(@Param('id') id: string) {
+    return this.chatsService.findMessagesById(id);
   }
 
   @UseGuards(JwtAuthGuard)

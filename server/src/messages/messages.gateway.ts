@@ -10,8 +10,6 @@ import {
 import { Socket, Server } from 'socket.io';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { MessagesService } from './messages.service';
-import { CurrentUser } from 'src/common/decorators/current-user.decorator';
-import * as schema from '../database/schema';
 import { UseGuards } from '@nestjs/common';
 import { WsJwtAuthGuard } from 'src/auth/guards/jwt-ws.guard';
 
@@ -21,7 +19,6 @@ import { WsJwtAuthGuard } from 'src/auth/guards/jwt-ws.guard';
     credentials: true,
   },
 })
-@UseGuards(WsJwtAuthGuard)
 export class MessagesGateway
   implements OnGatewayConnection, OnGatewayDisconnect
 {
@@ -53,12 +50,14 @@ export class MessagesGateway
     client.leave(chatId);
   }
 
+  @UseGuards(WsJwtAuthGuard)
   @SubscribeMessage('send_message')
   async handleMessage(
     @MessageBody() data: CreateMessageDto,
-    @CurrentUser() user: typeof schema.users.$inferSelect,
+    @ConnectedSocket() client: Socket,
   ) {
-    const message = await this.messagesService.create(user.id, data);
+    const user = client.data.user;
+    const message = await this.messagesService.create(user.sub, data);
     this.server.to(data.chatId).emit('receive_message', message);
   }
 }

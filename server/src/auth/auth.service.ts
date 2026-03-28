@@ -59,6 +59,8 @@ export class AuthService {
     try {
       const user = await this.usersService.findByEmail(email);
       const isMatch = await bcrypt.compare(password, user.password);
+      console.log(user);
+      console.log(isMatch);
       if (!isMatch) {
         throw new UnauthorizedException();
       }

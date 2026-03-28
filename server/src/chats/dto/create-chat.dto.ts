@@ -15,6 +15,10 @@ export class CreateChatDto {
   @IsBoolean()
   isGroup: boolean;
 
+  @IsOptional()
+  @IsString()
+  image: string;
+
   @IsNotEmpty()
   @IsArray()
   members: string[];

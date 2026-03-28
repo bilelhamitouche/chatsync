@@ -8,6 +8,7 @@ import { users } from './users';
 export const chats = pgTable('chats', {
   id: uuid().primaryKey().defaultRandom(),
   name: text('name'),
+  image: text('image'),
   isGroup: boolean('is_group').notNull(),
   creatorId: uuid('creator_id').references(() => users.id, {
     onDelete: 'cascade',

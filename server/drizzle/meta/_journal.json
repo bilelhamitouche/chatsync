@@ -15,6 +15,20 @@
       "when": 1772809684521,
       "tag": "0001_workable_fabian_cortez",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1774405207867,
+      "tag": "0002_even_xavin",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1774563639551,
+      "tag": "0003_useful_dorian_gray",
+      "breakpoints": true
     }
   ]
 }

@@ -14,11 +14,11 @@ export class MessagesService {
   ) {}
 
   async create(senderId: string, createMessageDto: CreateMessageDto) {
-    const user = await this.database
+    const message = await this.database
       .insert(schema.messages)
       .values({ senderId, ...createMessageDto })
       .returning();
-    return user[0];
+    return message[0];
   }
 
   async findAll() {
@@ -26,20 +26,20 @@ export class MessagesService {
   }
 
   async findById(id: string) {
-    const user = await this.database
+    const message = await this.database
       .selectDistinct()
       .from(schema.messages)
       .where(eq(schema.messages.id, id));
-    return user[0];
+    return message[0];
   }
 
   async update(id: string, updateMessageDto: UpdateMessageDto) {
-    const updatedUser = await this.database
+    const updatedMessage = await this.database
       .update(schema.messages)
       .set(updateMessageDto)
       .where(eq(schema.messages.id, id))
       .returning();
-    return updatedUser[0];
+    return updatedMessage[0];
   }
 
   async remove(id: string) {
