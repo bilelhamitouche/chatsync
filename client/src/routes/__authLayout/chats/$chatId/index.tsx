@@ -26,6 +26,10 @@ function RouteComponent() {
     socket.connect();
     socket.emit("join_room", params.chatId);
 
+    socket.on("connect", () => {
+      socket.emit("join_room", params.chatId);
+    });
+
     socket.on("receive_message", (message) => {
       queryClient.setQueryData(
         ["messages", params.chatId],
@@ -38,6 +42,7 @@ function RouteComponent() {
     return () => {
       socket.emit("leave_room", params.chatId);
       socket.off("receive_message");
+      socket.off("connect");
       socket.disconnect();
     };
   }, [params.chatId]);
