@@ -2,7 +2,6 @@ import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 
 const getCurrentUserByContext = (context: ExecutionContext) => {
   if (context.getType() === 'ws') {
-    console.log(context.switchToWs().getClient().user);
     return context.switchToWs().getClient().user;
   }
   return context.switchToHttp().getRequest().user;
