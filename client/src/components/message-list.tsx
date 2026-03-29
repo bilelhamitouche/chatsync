@@ -1,5 +1,5 @@
 import { getChatMessagesOptions } from "@/api/queries/messages";
-import { Box, ScrollArea, Stack, Text } from "@chakra-ui/react";
+import { ScrollArea } from "@chakra-ui/react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import MessageBubble from "./message-bubble";
 
@@ -12,7 +12,7 @@ export default function MessageList({
 }) {
   const { data: messages } = useSuspenseQuery(getChatMessagesOptions(chatId));
   return (
-    <ScrollArea.Root w="full" h="full">
+    <ScrollArea.Root w="full" h="full" minH="0">
       <ScrollArea.Viewport>
         <ScrollArea.Content
           display="flex"

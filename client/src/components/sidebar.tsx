@@ -22,13 +22,15 @@ export default function Sidebar() {
   const [groupOpen, setGroupOpen] = useState(false);
   return (
     <Stack
-      p="4"
+      p={{ base: "0", md: "4" }}
       w="sm"
       flexShrink="0"
       h="dvh"
       shadow="sm"
+      width={{ base: "0", md: "fit-content" }}
+      opacity={{ base: "0", md: "1" }}
       transform={{ base: "translateX(-100%)", md: "translateX(0)" }}
-      transition="transform"
+      transition="all"
       transitionDuration="moderate"
     >
       <Flex align="center" justify="center">

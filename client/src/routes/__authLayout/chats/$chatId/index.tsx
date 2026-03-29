@@ -47,7 +47,15 @@ function RouteComponent() {
     };
   }, [params.chatId]);
   return (
-    <Grid templateRows="1fr auto" p="4" w="full">
+    <Grid
+      templateRows="1fr auto"
+      p="4"
+      w="full"
+      h="dvh"
+      minW="0"
+      minH="0"
+      overflow="hidden"
+    >
       <Suspense fallback={<div>Loading messages...</div>}>
         <MessageList currentUserId={currentUser.id} chatId={params.chatId} />
       </Suspense>
