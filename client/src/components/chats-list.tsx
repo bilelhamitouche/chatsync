@@ -13,8 +13,8 @@ export default function ChatsList({ onClose }: ChatsListProps) {
   const { data: currentUser } = useSuspenseQuery(currentUserOptions());
   if (chats.length === 0) {
     return (
-      <Box flex="1" h="full">
-        <Text color="fg.subtle" fontSize="sm" textAlign="center">
+      <Box flex="1" h="full" p="1">
+        <Text color="fg.muted" fontSize="sm" textAlign="center">
           No Chats Yet
         </Text>
       </Box>
