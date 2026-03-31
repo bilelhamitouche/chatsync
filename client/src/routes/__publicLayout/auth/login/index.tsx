@@ -13,7 +13,6 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useForm } from "@tanstack/react-form";
 import { loginSchema } from "@/lib/zod";
 import { useLoginMutation } from "@/api/mutations/auth";
-import { toaster } from "@/components/ui/toaster";
 
 export const Route = createFileRoute("/__publicLayout/auth/login/")({
   component: RouteComponent,
