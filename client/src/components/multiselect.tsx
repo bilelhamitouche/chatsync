@@ -1,4 +1,5 @@
 import { membersQueryOptions } from "@/api/queries/members";
+import type { Member } from "@/lib/types";
 import { formatAvatarName } from "@/utils/formatAvatarName";
 import { Avatar, Portal, Select, useListCollection } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
@@ -17,8 +18,7 @@ export default function MultiSelect({
 }: MultiSelectProps) {
   const { data, isPending } = useQuery(membersQueryOptions());
   const { collection } = useListCollection({
-    initialItems:
-      (data as { id: string; name: string; avatar: string }[]) || [],
+    initialItems: (data as Pick<Member, "id" | "name" | "avatar">[]) || [],
     itemToString: (item) => item.name,
     itemToValue: (item) => item.id,
   });
