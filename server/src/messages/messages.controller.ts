@@ -11,6 +11,7 @@ import {
   UploadedFile,
   UseInterceptors,
   Post,
+  NotFoundException,
 } from '@nestjs/common';
 import { MessagesService } from './messages.service';
 import { UpdateMessageDto } from './dto/update-message.dto';
@@ -36,7 +37,11 @@ export class MessagesController {
   @Get(':id')
   @HttpCode(HttpStatus.CREATED)
   async findOne(@Param('id') id: string) {
-    return this.messagesService.findById(id);
+    const message = this.messagesService.findById(id);
+    if (!message) {
+      throw new NotFoundException();
+    }
+    return message;
   }
 
   @UseGuards(JwtAuthGuard)
@@ -60,8 +65,8 @@ export class MessagesController {
 
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  @HttpCode(HttpStatus.OK)
+  @HttpCode(HttpStatus.NO_CONTENT)
   async remove(@Param('id') id: string) {
-    return this.messagesService.remove(id);
+    await this.messagesService.remove(id);
   }
 }
