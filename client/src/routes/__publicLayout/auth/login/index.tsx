@@ -32,14 +32,6 @@ function RouteComponent() {
     },
     onSubmit: async ({ value }) => {
       await login.mutateAsync(value);
-      if (login.isError) {
-        toaster.create({
-          title: login.error.name,
-          description: login.error.message,
-          type: "error",
-          closable: true,
-        });
-      }
     },
   });
   return (

@@ -33,14 +33,6 @@ function RouteComponent() {
     },
     onSubmit: async ({ value }) => {
       await register.mutateAsync(value);
-      if (register.isError) {
-        toaster.create({
-          title: register.error.name,
-          description: register.error.message,
-          type: "error",
-          closable: true,
-        });
-      }
     },
   });
   return (
