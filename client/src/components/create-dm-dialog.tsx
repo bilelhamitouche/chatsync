@@ -16,6 +16,7 @@ import { useQuery } from "@tanstack/react-query";
 import { membersQueryOptions } from "@/api/queries/members";
 import { useCreateDmMutation } from "@/api/mutations/chats";
 import { formatAvatarName } from "@/utils/formatAvatarName";
+import type { Member } from "@/lib/types";
 
 interface CreateDmDialog {
   isDialogOpen: boolean;
@@ -41,8 +42,7 @@ export default function CreateDmDialog({
   });
   const { data, isPending } = useQuery(membersQueryOptions());
   const { collection } = useListCollection({
-    initialItems:
-      (data as { id: string; name: string; avatar: string }[]) || [],
+    initialItems: (data as Pick<Member, "id" | "name" | "avatar">[]) || [],
     itemToString: (item) => item.name,
     itemToValue: (item) => item.id,
   });
