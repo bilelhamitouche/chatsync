@@ -16,6 +16,29 @@ export interface Member {
   updatedAt: Date;
 }
 
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  avatar: string | null;
+  role: "Admin" | "User";
+  refreshToken: string | null;
+  password: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface Chat {
+  id: string;
+  name: string | null;
+  isGroup: boolean;
+  image: string | null;
+  creatorId: string;
+  createdAt: Date;
+  updatedAt: Date;
+  members: Pick<Member, "name" | "id" | "avatar">[];
+}
+
 export interface Message {
   id: string;
   content: string | null;
@@ -50,7 +73,18 @@ export interface CreateDmData {
   isGroup: boolean;
 }
 
-export interface createMessageData {
+export interface CreateMessageData {
   content: string;
   chatId: string;
+}
+
+export interface UpdateProfileInfoData {
+  name?: string;
+  email?: string;
+  avatar?: string;
+}
+
+export interface UpdatePasswordData {
+  currentPassword: string;
+  password: string;
 }
