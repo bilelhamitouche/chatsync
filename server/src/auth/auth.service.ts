@@ -9,6 +9,7 @@ import { UsersService } from 'src/users/users.service';
 import bcrypt from 'bcrypt';
 import { RegisterDto } from './dto/register.dto';
 import * as schema from '../database/schema';
+import { SALT_ROUNDS } from 'src/common/constants/users.constants';
 
 @Injectable()
 export class AuthService {
@@ -85,7 +86,7 @@ export class AuthService {
       expiresAccessToken,
       expiresRefreshToken,
     } = await this.generateTokens(user.id, user.email);
-    const hashedRefreshToken = await bcrypt.hash(refreshToken, 10);
+    const hashedRefreshToken = await bcrypt.hash(refreshToken, SALT_ROUNDS);
     await this.usersService.update(user.id, {
       refreshToken: hashedRefreshToken,
     });

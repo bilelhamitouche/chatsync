@@ -1,11 +1,12 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import * as schema from '../database/schema';
 import { DATABASE_CONNECTION } from 'src/database/database-connection';
-import { eq, not } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 import { UpdateUserDto } from './dto/update-user.dto';
 import bcrypt from 'bcrypt';
+import { SALT_ROUNDS } from 'src/common/constants/users.constants';
 
 @Injectable()
 export class UsersService {
@@ -14,7 +15,10 @@ export class UsersService {
     private readonly database: NodePgDatabase<typeof schema>,
   ) {}
   async create(createUserDto: CreateUserDto) {
-    const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
+    const hashedPassword = await bcrypt.hash(
+      createUserDto.password,
+      SALT_ROUNDS,
+    );
     const user = await this.database
       .insert(schema.users)
       .values({ ...createUserDto, password: hashedPassword })
@@ -67,7 +71,7 @@ export class UsersService {
     const updatedUserDto = updateUserDto.password
       ? {
           ...updateUserDto,
-          password: await bcrypt.hash(updateUserDto.password, 10),
+          password: await bcrypt.hash(updateUserDto.password, SALT_ROUNDS),
         }
       : updateUserDto;
     const updatedUser = await this.database
@@ -76,6 +80,28 @@ export class UsersService {
       .where(eq(schema.users.id, id))
       .returning();
     return updatedUser[0];
+  }
+
+  async updatePassword(
+    id: string,
+    currentPassword: string,
+    newPassword: string,
+  ) {
+    const user = await this.findById(id);
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) {
+      throw new BadRequestException('Current password is incorrect');
+    }
+    return this.update(id, { password: newPassword });
+  }
+
+  async deleteAccount(id: string, password: string) {
+    const user = await this.findById(id);
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      throw new BadRequestException('Password is incorrect');
+    }
+    return this.remove(id);
   }
 
   async remove(id: string) {
