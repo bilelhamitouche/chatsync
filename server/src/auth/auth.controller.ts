@@ -34,6 +34,11 @@ export class AuthController {
     response.cookie('Authentication', tokens.refreshToken, {
       httpOnly: true,
       secure: this.configService.get('NODE_ENV') === 'production',
+      expires: new Date(Date.now() + Number(tokens.expiresAccessToken)),
+    });
+    response.cookie('Refresh', tokens.refreshToken, {
+      httpOnly: true,
+      secure: this.configService.get('NODE_ENV') === 'production',
       expires: new Date(Date.now() + Number(tokens.expiresRefreshToken)),
     });
   }

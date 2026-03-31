@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   UnauthorizedException,
@@ -61,11 +62,11 @@ export class AuthService {
       const user = await this.usersService.findByEmail(email);
       const isMatch = await bcrypt.compare(password, user.password);
       if (!isMatch) {
-        throw new UnauthorizedException();
+        throw new BadRequestException('Invalid credentials');
       }
       return user;
     } catch {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new BadRequestException('Invalid credentials');
     }
   }
 
