@@ -71,8 +71,8 @@ export class ChatsController {
 
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  @HttpCode(HttpStatus.OK)
+  @HttpCode(HttpStatus.NO_CONTENT)
   async remove(@Param('id') id: string) {
-    return this.chatsService.remove(id);
+    await this.chatsService.remove(id);
   }
 }
