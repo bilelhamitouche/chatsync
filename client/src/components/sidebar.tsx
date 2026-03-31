@@ -16,22 +16,23 @@ import CreateDmDialog from "./create-dm-dialog";
 import AvatarDropdown from "./avatar-dropdown";
 import AvatarDropdownSkeleton from "./avatar-dropdown-skeleton";
 import ChatsList from "./chats-list";
+import { useSidebar } from "@/context/sidebar-context";
 
-export default function Sidebar() {
+interface SidebarProps {
+  withShadow: boolean;
+}
+
+export default function Sidebar({ withShadow }: SidebarProps) {
+  const { onClose } = useSidebar();
   const [DmOpen, setDmOpen] = useState(false);
   const [groupOpen, setGroupOpen] = useState(false);
   return (
     <Stack
-      p={{ base: "0", md: "4" }}
-      w="sm"
+      p="4"
+      w="full"
       flexShrink="0"
       h="dvh"
-      shadow="sm"
-      width={{ base: "0", md: "fit-content" }}
-      opacity={{ base: "0", md: "1" }}
-      transform={{ base: "translateX(-100%)", md: "translateX(0)" }}
-      transition="all"
-      transitionDuration="moderate"
+      shadow={withShadow ? "sm" : "none"}
     >
       <Flex align="center" justify="center">
         <LogoImage width="180" />
@@ -72,7 +73,7 @@ export default function Sidebar() {
         />
       </Flex>
       <Suspense fallback={<div>Loading chats...</div>}>
-        <ChatsList />
+        <ChatsList onClose={onClose} />
       </Suspense>
       <Separator />
       <Suspense fallback={<AvatarDropdownSkeleton />}>
