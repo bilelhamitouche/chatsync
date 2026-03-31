@@ -98,7 +98,7 @@ export default function CreateDmDialog({
                           <Portal>
                             <Select.Positioner>
                               <Select.Content>
-                                {data.map((member: any) => (
+                                {data?.map((member: Member) => (
                                   <Select.Item
                                     justifyContent="flex-start"
                                     item={member}
@@ -106,7 +106,7 @@ export default function CreateDmDialog({
                                   >
                                     <Avatar.Root size="xs">
                                       <Avatar.Image
-                                        src={member.avatar}
+                                        src={member.avatar ?? undefined}
                                         alt={`${member.name} image`}
                                       />
                                       <Avatar.Fallback>

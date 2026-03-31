@@ -1,5 +1,4 @@
 import { useDeleteAccountMutation } from "@/api/mutations/auth";
-import { currentUserOptions } from "@/api/queries/auth";
 import { deleteAccountSchema } from "@/lib/zod";
 import {
   Button,
@@ -10,11 +9,9 @@ import {
   Portal,
 } from "@chakra-ui/react";
 import { useForm } from "@tanstack/react-form";
-import { useSuspenseQuery } from "@tanstack/react-query";
 
 export default function DeleteAccountDialog() {
   const deleteAccount = useDeleteAccountMutation();
-  const { data: currentUser } = useSuspenseQuery(currentUserOptions());
   const form = useForm({
     defaultValues: {
       password: "",

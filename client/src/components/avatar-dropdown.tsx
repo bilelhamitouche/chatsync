@@ -29,8 +29,8 @@ export default function AvatarDropdown() {
           py="3"
         >
           <Avatar.Root size="xs">
+            <Avatar.Image src={data.avatar ?? undefined} />
             <Avatar.Fallback name={data.name} />
-            <Avatar.Image src={data.avatar} />
           </Avatar.Root>
           <Stack gap="0" align="start">
             <Text>{data.name}</Text>
@@ -45,7 +45,7 @@ export default function AvatarDropdown() {
               <Flex gap="2" align="center">
                 <Avatar.Root size="xs">
                   <Avatar.Fallback name={data.name} />
-                  <Avatar.Image src={data.avatar} />
+                  <Avatar.Image src={data.avatar ?? undefined} />
                 </Avatar.Root>
                 <Stack gap="0">
                   <Text>{data.name}</Text>
