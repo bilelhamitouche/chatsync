@@ -1,3 +1,4 @@
+import { toaster } from "@/components/ui/toaster";
 import type { CreateDmData, CreateGroupData } from "@/lib/types";
 import { apiFetch } from "@/utils/apiFetch";
 import { useMutation } from "@tanstack/react-query";
@@ -12,7 +13,15 @@ export const useCreateDmMutation = () =>
       });
     },
     onError: (error) => {
-      throw new Error(error.message);
+      toaster.error({
+        title: "Failed to create Direct Message",
+        description: error.message,
+      });
+    },
+    onSuccess: () => {
+      toaster.success({
+        title: "Direct Message created successfully",
+      });
     },
   });
 
@@ -26,6 +35,14 @@ export const useCreateGroupMutation = () =>
       });
     },
     onError: (error) => {
-      throw new Error(error.message);
+      toaster.error({
+        title: "Failed to create Group",
+        description: error.message,
+      });
+    },
+    onSuccess: () => {
+      toaster.success({
+        title: "Group created successfully",
+      });
     },
   });
