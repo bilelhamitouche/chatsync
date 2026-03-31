@@ -57,3 +57,10 @@ export const updatePasswordSchema = z
     error: "Password cannot be the same as current password",
     path: ["password"],
   });
+
+export const deleteAccountSchema = z.object({
+  password: z
+    .string()
+    .trim()
+    .min(8, { error: "Password should be at least 8 characters long" }),
+});

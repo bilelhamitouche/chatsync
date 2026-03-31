@@ -88,3 +88,7 @@ export interface UpdatePasswordData {
   currentPassword: string;
   password: string;
 }
+
+export interface DeleteAccountData {
+  password: string;
+}

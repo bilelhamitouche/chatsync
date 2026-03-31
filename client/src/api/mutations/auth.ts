@@ -2,6 +2,7 @@ import { toaster } from "@/components/ui/toaster";
 import { queryClient, router } from "@/lib/router";
 import { socket } from "@/lib/socket";
 import type {
+  DeleteAccountData,
   LoginData,
   RegisterData,
   UpdatePasswordData,
@@ -74,9 +75,11 @@ export const useLogoutMutation = () =>
 
 export const useDeleteAccountMutation = () =>
   useMutation({
-    mutationFn: async (id: string) => {
-      await apiFetch(`/api/users/${id}/delete`, {
-        method: "POST",
+    mutationFn: async (data: DeleteAccountData) => {
+      await apiFetch(`/api/users/me/delete`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
       });
     },
     onError: (error) => {
