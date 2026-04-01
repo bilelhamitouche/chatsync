@@ -2,7 +2,7 @@ import { Avatar, Box, Flex, Stack, Text } from "@chakra-ui/react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { getChatsOptions } from "@/api/queries/chats";
 import { currentUserOptions } from "@/api/queries/auth";
-import { Link, useMatchRoute } from "@tanstack/react-router";
+import { Link, useRouterState } from "@tanstack/react-router";
 import { formatAvatarName } from "@/utils/formatAvatarName";
 import type { Chat } from "@/lib/types";
 import { LuImage } from "react-icons/lu";
@@ -11,7 +11,7 @@ interface ChatsListProps {
 }
 
 export default function ChatsList({ onClose }: ChatsListProps) {
-  const matchRoute = useMatchRoute();
+  const routerState = useRouterState();
   const { data: chats } = useSuspenseQuery(getChatsOptions());
   const { data: currentUser } = useSuspenseQuery(currentUserOptions());
   if (chats.length === 0) {
@@ -23,6 +23,9 @@ export default function ChatsList({ onClose }: ChatsListProps) {
       </Box>
     );
   }
+  function isActive(chatId: string) {
+    return routerState.location.pathname === `/chats/${chatId}`;
+  }
   return (
     <Stack h="full">
       {chats.map((chat: Chat) => {
@@ -30,10 +33,6 @@ export default function ChatsList({ onClose }: ChatsListProps) {
         const dmMember = chat.members.find(
           (member: any) => member.id !== currentUser.id,
         );
-        const isActive = matchRoute({
-          to: "/chats/$chatId",
-          params: { chatId: chat.id },
-        });
         return (
           <Link
             to="/chats/$chatId"
@@ -48,9 +47,9 @@ export default function ChatsList({ onClose }: ChatsListProps) {
               gap="2"
               cursor="pointer"
               overflowY="auto"
-              bg={isActive ? "bg.muted" : "transparent"}
-              fontWeight={isActive ? "semibold" : "normal"}
-              _hover={{ bg: isActive ? "bg.muted" : "bg.subtle" }}
+              bg={isActive(chat.id) ? "bg.muted" : "transparent"}
+              fontWeight={isActive(chat.id) ? "semibold" : "normal"}
+              _hover={{ bg: isActive(chat.id) ? "bg.muted" : "bg.subtle" }}
             >
               <Avatar.Root size="sm">
                 <Avatar.Image
