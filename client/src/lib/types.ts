@@ -37,6 +37,7 @@ export interface Chat {
   createdAt: Date;
   updatedAt: Date;
   members: Pick<Member, "name" | "id" | "avatar">[];
+  lastMessage: Pick<Message, "content" | "sentAt" | "imageUrl">;
 }
 
 export interface Message {

@@ -41,6 +41,10 @@ export class ChatsService {
           name: schema.users.name,
           avatar: schema.users.avatar,
         },
+        lastMessage: {
+          content: schema.messages.content,
+          sentAt: schema.messages.sentAt,
+        },
       })
       .from(schema.chats)
       .leftJoin(
@@ -48,6 +52,7 @@ export class ChatsService {
         eq(schema.chats.id, schema.chatMembers.chatId),
       )
       .leftJoin(schema.users, eq(schema.chatMembers.memberId, schema.users.id))
+      .leftJoin(schema.messages, eq(schema.chats.id, schema.messages.chatId))
       .where(
         and(
           or(
@@ -66,12 +71,17 @@ export class ChatsService {
               ),
           ),
         ),
-      );
+      )
+      .orderBy(desc(schema.messages.sentAt));
 
     const chatsMap = new Map();
     for (const row of rows) {
       if (!chatsMap.has(row.chat.id)) {
-        chatsMap.set(row.chat.id, { ...row.chat, members: [] });
+        chatsMap.set(row.chat.id, {
+          ...row.chat,
+          members: [],
+          lastMessage: row.lastMessage,
+        });
       }
       if (row.member?.id) {
         chatsMap.get(row.chat.id).members.push(row.member);
@@ -79,19 +89,6 @@ export class ChatsService {
     }
 
     return Array.from(chatsMap.values());
-  }
-
-  async findLastMessage(id: string) {
-    const lastMessage = await this.database
-      .selectDistinct({
-        content: schema.messages.content,
-        updatedAt: schema.messages.updatedAt,
-      })
-      .from(schema.messages)
-      .where(eq(schema.messages.chatId, id))
-      .orderBy(desc(schema.messages.sentAt))
-      .limit(1);
-    return lastMessage[0];
   }
 
   async findMessagesById(chatId: string) {
