@@ -12,6 +12,7 @@ export interface Member {
   avatar: string | null;
   role: "Admin" | "User";
   refreshToken: string | null;
+  isAdmin: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -36,7 +37,7 @@ export interface Chat {
   creatorId: string;
   createdAt: Date;
   updatedAt: Date;
-  members: Pick<Member, "name" | "id" | "avatar">[];
+  members: Pick<Member, "name" | "id" | "avatar" | "isAdmin">[];
   lastMessage: Pick<Message, "content" | "sentAt" | "imageUrl">;
 }
 
