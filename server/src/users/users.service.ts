@@ -7,6 +7,7 @@ import { eq } from 'drizzle-orm';
 import { UpdateUserDto } from './dto/update-user.dto';
 import bcrypt from 'bcrypt';
 import { SALT_ROUNDS } from 'src/common/constants/users.constants';
+import { not } from 'drizzle-orm';
 
 @Injectable()
 export class UsersService {
@@ -48,7 +49,7 @@ export class UsersService {
         avatar: schema.users.avatar,
       })
       .from(schema.users)
-      .where(eq(schema.users.id, currentUserId));
+      .where(not(eq(schema.users.id, currentUserId)));
   }
 
   async findById(id: string) {

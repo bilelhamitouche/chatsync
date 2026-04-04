@@ -18,18 +18,22 @@ export class ChatsService {
       .insert(schema.chats)
       .values(createChatDto)
       .returning();
-    const chatMembers = createChatDto.members.map((member) => ({
+    const members = createChatDto.members.map((member) => ({
       memberId: member,
       chatId: chat[0].id,
       isAdmin: false,
     }));
-    await this.database
+    const chatMembers = await this.database
       .insert(schema.chatMembers)
       .values([
-        ...chatMembers,
+        ...members,
         { memberId: adminId, chatId: chat[0].id, isAdmin: true },
-      ]);
-    return chat[0];
+      ])
+      .returning({
+        id: schema.chatMembers.memberId,
+        isAdmin: schema.chatMembers.isAdmin,
+      });
+    return { ...chat[0], members: chatMembers };
   }
 
   async findAll(userId: string, search: string = '') {
@@ -40,6 +44,7 @@ export class ChatsService {
           id: schema.users.id,
           name: schema.users.name,
           avatar: schema.users.avatar,
+          isAdmin: schema.chatMembers.isAdmin,
         },
         lastMessage: {
           content: schema.messages.content,
@@ -119,6 +124,35 @@ export class ChatsService {
       )
       .where(eq(schema.chats.id, id));
     return chat[0];
+  }
+
+  async findMembersByChatId(chatId: string) {
+    const members = await this.database
+      .select({
+        id: schema.chatMembers.memberId,
+        name: schema.users.name,
+        avatar: schema.users.avatar,
+      })
+      .from(schema.chatMembers)
+      .leftJoin(schema.users, eq(schema.chatMembers.memberId, schema.users.id))
+      .where(eq(schema.chatMembers.chatId, chatId));
+    return members;
+  }
+
+  async leaveChat(userId: string, chatId: string) {
+    const members = await this.findMembersByChatId(chatId);
+    if (members.length <= 2) {
+      await this.remove(chatId);
+    } else {
+      await this.database
+        .delete(schema.chatMembers)
+        .where(
+          and(
+            eq(schema.chatMembers.memberId, userId),
+            eq(schema.chatMembers.chatId, chatId),
+          ),
+        );
+    }
   }
 
   async update(id: string, updateChatDto: UpdateChatDto) {

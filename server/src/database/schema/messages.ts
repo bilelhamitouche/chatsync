@@ -12,10 +12,10 @@ export const messages = pgTable('messages', {
   imageUrl: text('image_url'),
   senderId: uuid('sender_id')
     .notNull()
-    .references(() => users.id),
+    .references(() => users.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
   chatId: uuid('chat_id')
     .notNull()
-    .references(() => chats.id),
+    .references(() => chats.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
   sentAt: timestamp('sent_at', { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true })
     .notNull()
