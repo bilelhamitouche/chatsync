@@ -1,4 +1,5 @@
 import { getChatsOptions } from "@/api/queries/chats";
+import { membersQueryOptions } from "@/api/queries/members";
 import Sidebar from "@/components/sidebar";
 import { SidebarProvider } from "@/context/sidebar-context";
 import { Box, Drawer, Flex, Portal } from "@chakra-ui/react";
@@ -9,6 +10,7 @@ export const Route = createFileRoute("/__authLayout/chats")({
   component: RouteComponent,
   loader: async ({ context }) => {
     await context.queryClient.ensureQueryData(getChatsOptions());
+    await context.queryClient.ensureQueryData(membersQueryOptions());
   },
 });
 

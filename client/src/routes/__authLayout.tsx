@@ -1,7 +1,10 @@
 import { currentUserOptions } from "@/api/queries/auth";
-import { router } from "@/lib/router";
+import { queryClient, router } from "@/lib/router";
+import { socket } from "@/lib/socket";
 import { Flex, Text } from "@chakra-ui/react";
+import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Outlet } from "@tanstack/react-router";
+import { useEffect } from "react";
 
 export const Route = createFileRoute("/__authLayout")({
   component: RouteComponent,
@@ -28,5 +31,45 @@ export const Route = createFileRoute("/__authLayout")({
 });
 
 function RouteComponent() {
+  const { data: user } = useQuery(currentUserOptions());
+  useEffect(() => {
+    if (!user) return;
+    if (!socket.connected) {
+      socket.connect();
+    }
+    socket.on("chat_created", () => {
+      queryClient.invalidateQueries({
+        queryKey: ["chats"],
+        refetchType: "all",
+      });
+    });
+
+    socket.on("chat_edited", () => {
+      queryClient.invalidateQueries({
+        queryKey: ["chats"],
+        refetchType: "all",
+      });
+    });
+
+    socket.on("chat_left", () => {
+      queryClient.invalidateQueries({
+        queryKey: ["chats"],
+        refetchType: "all",
+      });
+    });
+
+    socket.on("chat_deleted", () => {
+      queryClient.invalidateQueries({
+        queryKey: ["chats"],
+        refetchType: "all",
+      });
+    });
+    return () => {
+      socket.off("chat_created");
+      socket.off("chat_edited");
+      socket.off("chat_left");
+      socket.off("chat_deleted");
+    };
+  }, [user]);
   return <Outlet />;
 }

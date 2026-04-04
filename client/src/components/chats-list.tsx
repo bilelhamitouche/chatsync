@@ -4,8 +4,9 @@ import { getChatsOptions } from "@/api/queries/chats";
 import { currentUserOptions } from "@/api/queries/auth";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { formatAvatarName } from "@/utils/formatAvatarName";
-import type { Chat } from "@/lib/types";
+import type { Chat, Member } from "@/lib/types";
 import { LuImage } from "react-icons/lu";
+import ChatActionsMenu from "./chat-actions-menu";
 interface ChatsListProps {
   onClose?: () => void;
 }
@@ -29,17 +30,23 @@ export default function ChatsList({ onClose }: ChatsListProps) {
   return (
     <Stack h="full">
       {chats.map((chat: Chat) => {
-        const isDm = !chat.isGroup;
+        const isGroup = chat.isGroup;
         const dmMember = chat.members.find(
-          (member: any) => member.id !== currentUser.id,
+          (member: Pick<Member, "id" | "name" | "avatar" | "isAdmin">) =>
+            member.id !== currentUser.id,
         );
+        const displayName = isGroup
+          ? chat.name
+          : (dmMember?.name ?? "Unknown User");
         return (
           <Link
+            key={chat.id}
             to="/chats/$chatId"
             params={{ chatId: chat.id }}
             onClick={onClose}
           >
             <Flex
+              className="group"
               align="center"
               borderRadius="md"
               w="full"
@@ -47,40 +54,50 @@ export default function ChatsList({ onClose }: ChatsListProps) {
               gap="2"
               cursor="pointer"
               overflowY="auto"
+              justifyContent="space-between"
               bg={isActive(chat.id) ? "bg.muted" : "transparent"}
               fontWeight={isActive(chat.id) ? "semibold" : "normal"}
               _hover={{ bg: isActive(chat.id) ? "bg.muted" : "bg.subtle" }}
             >
-              <Avatar.Root size="sm">
-                <Avatar.Image
-                  src={
-                    isDm ? (dmMember?.avatar as string) : (chat.image as string)
-                  }
-                  alt={`${chat.name} image`}
-                />
-                <Avatar.Fallback>
-                  {isDm
-                    ? formatAvatarName(dmMember?.name as string)
-                    : formatAvatarName(chat.name as string)}
-                </Avatar.Fallback>
-              </Avatar.Root>
-              <Stack gap="0">
-                <Text fontSize="sm">{isDm ? dmMember?.name : chat.name}</Text>
-                {chat.lastMessage ? (
-                  chat.lastMessage.content ? (
-                    <Text fontSize="xs" color="fg.muted">
-                      {chat.lastMessage.content}
-                    </Text>
-                  ) : (
-                    <Box>
-                      <LuImage />
+              <Flex gap="2">
+                <Avatar.Root size="sm">
+                  <Avatar.Image
+                    src={
+                      isGroup
+                        ? (chat.image as string)
+                        : (dmMember?.avatar as string)
+                    }
+                    alt={`${chat.name} image`}
+                  />
+                  <Avatar.Fallback>
+                    {formatAvatarName(displayName)}
+                  </Avatar.Fallback>
+                </Avatar.Root>
+                <Stack gap="0">
+                  <Text fontSize="sm">{displayName}</Text>
+                  {chat.lastMessage ? (
+                    chat.lastMessage.content ? (
                       <Text fontSize="xs" color="fg.muted">
-                        Photo
+                        {chat.lastMessage.content}
                       </Text>
-                    </Box>
-                  )
-                ) : null}
-              </Stack>
+                    ) : (
+                      <Box>
+                        <LuImage />
+                        <Text fontSize="xs" color="fg.muted">
+                          Photo
+                        </Text>
+                      </Box>
+                    )
+                  ) : null}
+                </Stack>
+              </Flex>
+              <ChatActionsMenu
+                chatId={chat.id}
+                isAdmin={
+                  chat.members.find((member) => member.id == currentUser.id)
+                    ?.isAdmin ?? false
+                }
+              />
             </Flex>
           </Link>
         );

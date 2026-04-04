@@ -11,7 +11,9 @@ import {
 import { useForm } from "@tanstack/react-form";
 import { type Dispatch, type SetStateAction } from "react";
 import MultiSelect from "./multiselect";
-import { useCreateGroupMutation } from "@/api/mutations/chats";
+import { toaster } from "./ui/toaster";
+import { socket } from "@/lib/socket";
+import { queryClient } from "@/lib/router";
 
 interface CreateGroupDialog {
   isDialogOpen: boolean;
@@ -22,7 +24,6 @@ export default function CreateGroupDialog({
   isDialogOpen,
   setIsDialogOpen,
 }: CreateGroupDialog) {
-  const groupChat = useCreateGroupMutation();
   const form = useForm({
     defaultValues: {
       name: "",
@@ -33,11 +34,33 @@ export default function CreateGroupDialog({
       onSubmit: createGroupSchema,
     },
     onSubmit: async ({ value }) => {
-      await groupChat.mutateAsync({
-        members: value.members,
-        name: value.name,
-        isGroup: true,
-      });
+      try {
+        const response = await socket.emitWithAck("create_chat", {
+          name: value.name,
+          members: value.members,
+          isGroup: true,
+        });
+        if (response.error) {
+          toaster.error({
+            title: "Failed to create Group",
+            description: response.error,
+          });
+        } else {
+          queryClient.refetchQueries({
+            queryKey: ["chats"],
+            type: "all",
+          });
+          toaster.success({
+            title: "Group created successfully",
+          });
+        }
+      } catch (err) {
+        toaster.error({
+          title: "Failed to create Group",
+          description: "Something wrong happened",
+        });
+      }
+      setIsDialogOpen(false);
     },
   });
   return (
@@ -103,11 +126,7 @@ export default function CreateGroupDialog({
               <Button
                 form="create-group-form"
                 type="submit"
-                onClick={() => {
-                  if (!groupChat.isError) {
-                    setIsDialogOpen(false);
-                  }
-                }}
+                disabled={form.state.isSubmitting}
               >
                 Create
               </Button>

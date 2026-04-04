@@ -26,12 +26,10 @@ function RouteComponent() {
   const params = Route.useParams();
   const { data: currentUser } = useSuspenseQuery(currentUserOptions());
   useEffect(() => {
-    socket.connect();
+    if (!socket.connected) {
+      socket.connect();
+    }
     socket.emit("join_room", params.chatId);
-
-    socket.on("connect", () => {
-      socket.emit("join_room", params.chatId);
-    });
 
     socket.on("receive_message", (message) => {
       queryClient.setQueryData(
@@ -40,13 +38,15 @@ function RouteComponent() {
           return [...(old ?? []), message];
         },
       );
+      queryClient.invalidateQueries({
+        queryKey: ["chats"],
+        refetchType: "all",
+      });
     });
 
     return () => {
       socket.emit("leave_room", params.chatId);
       socket.off("receive_message");
-      socket.off("connect");
-      socket.disconnect();
     };
   }, [params.chatId]);
   return (

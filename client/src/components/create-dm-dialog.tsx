@@ -1,22 +1,18 @@
 import { createDmSchema } from "@/lib/zod";
 import {
-  Avatar,
   Button,
   CloseButton,
   Dialog,
   Field,
   Portal,
-  Select,
   Stack,
-  useListCollection,
 } from "@chakra-ui/react";
 import { useForm } from "@tanstack/react-form";
-import { useEffect, type Dispatch, type SetStateAction } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { membersQueryOptions } from "@/api/queries/members";
-import { useCreateDmMutation } from "@/api/mutations/chats";
-import { formatAvatarName } from "@/utils/formatAvatarName";
-import type { Member } from "@/lib/types";
+import { type Dispatch, type SetStateAction } from "react";
+import { socket } from "@/lib/socket";
+import SingleSelect from "./singleselect";
+import { toaster } from "./ui/toaster";
+import { queryClient } from "@/lib/router";
 
 interface CreateDmDialog {
   isDialogOpen: boolean;
@@ -27,7 +23,6 @@ export default function CreateDmDialog({
   isDialogOpen,
   setIsDialogOpen,
 }: CreateDmDialog) {
-  const dmChat = useCreateDmMutation();
   const form = useForm({
     defaultValues: {
       members: [] as string[],
@@ -37,18 +32,34 @@ export default function CreateDmDialog({
       onSubmit: createDmSchema,
     },
     onSubmit: async ({ value }) => {
-      await dmChat.mutateAsync({ members: value.members, isGroup: false });
+      try {
+        const response = await socket.emitWithAck("create_chat", {
+          members: value.members,
+          isGroup: false,
+        });
+        if (response.error) {
+          toaster.error({
+            title: "Failed to create Direct Message",
+            description: response.error,
+          });
+        } else {
+          queryClient.refetchQueries({
+            queryKey: ["chats"],
+            type: "all",
+          });
+          toaster.success({
+            title: "Created Direct Message successfully",
+          });
+        }
+      } catch (err: any) {
+        toaster.error({
+          title: "Failed to create Direct Message",
+          description: "Something wrong happened",
+        });
+      }
+      setIsDialogOpen(false);
     },
   });
-  const { data, isPending } = useQuery(membersQueryOptions());
-  const { collection } = useListCollection({
-    initialItems: (data as Pick<Member, "id" | "name" | "avatar">[]) || [],
-    itemToString: (item) => item.name,
-    itemToValue: (item) => item.id,
-  });
-  useEffect(() => {
-    if (data) collection.setItems(data);
-  }, [data]);
   return (
     <Dialog.Root
       size="sm"
@@ -66,7 +77,7 @@ export default function CreateDmDialog({
               <Dialog.Title>Create DM Chat</Dialog.Title>
             </Dialog.Header>
             <Dialog.Body>
-              <Stack gap="4" width="full" asChild>
+              <Stack gap="4" width="full">
                 <form
                   id="create-dm-form"
                   onSubmit={(e) => {
@@ -79,48 +90,11 @@ export default function CreateDmDialog({
                     children={(field) => (
                       <Field.Root>
                         <Field.Label>Member</Field.Label>
-                        <Select.Root
-                          closeOnSelect
-                          disabled={isPending || dmChat.isPending}
-                          collection={collection}
+                        <SingleSelect
                           value={field.state.value}
-                          onValueChange={(e) => field.handleChange(e.value)}
+                          onChange={field.handleChange}
                           onBlur={field.handleBlur}
-                        >
-                          <Select.Control>
-                            <Select.Trigger>
-                              <Select.ValueText placeholder="Select member" />
-                            </Select.Trigger>
-                            <Select.IndicatorGroup>
-                              <Select.Indicator />
-                            </Select.IndicatorGroup>
-                          </Select.Control>
-                          <Portal>
-                            <Select.Positioner>
-                              <Select.Content>
-                                {data?.map((member: Member) => (
-                                  <Select.Item
-                                    justifyContent="flex-start"
-                                    item={member}
-                                    key={member.id}
-                                  >
-                                    <Avatar.Root size="xs">
-                                      <Avatar.Image
-                                        src={member.avatar ?? undefined}
-                                        alt={`${member.name} image`}
-                                      />
-                                      <Avatar.Fallback>
-                                        {formatAvatarName(member.name)}
-                                      </Avatar.Fallback>
-                                    </Avatar.Root>
-                                    {member.name}
-                                    <Select.ItemIndicator />
-                                  </Select.Item>
-                                ))}
-                              </Select.Content>
-                            </Select.Positioner>
-                          </Portal>
-                        </Select.Root>
+                        />
                       </Field.Root>
                     )}
                   />
@@ -133,13 +107,8 @@ export default function CreateDmDialog({
               </Button>
               <Button
                 form="create-dm-form"
-                disabled={isPending || dmChat.isPending}
+                disabled={form.state.isSubmitting}
                 type="submit"
-                onClick={() => {
-                  if (!dmChat.isError) {
-                    setIsDialogOpen(false);
-                  }
-                }}
               >
                 Create
               </Button>
