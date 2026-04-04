@@ -1,4 +1,5 @@
-export function formatAvatarName(name: string) {
+export function formatAvatarName(name?: string | null) {
+  if (!name) return "?";
   const nameArray = name.split(" ");
   if (nameArray.length === 1) {
     return nameArray[0][0].toUpperCase();
