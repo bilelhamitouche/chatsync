@@ -1,3 +1,5 @@
+import { socket } from "@/lib/socket";
+
 export const apiFetch = async (path: string, options?: RequestInit) => {
   let res = await fetch(`${import.meta.env.VITE_API_URL}${path}`, {
     credentials: "include",
@@ -13,6 +15,8 @@ export const apiFetch = async (path: string, options?: RequestInit) => {
       },
     );
     if (refresh.ok) {
+      socket.disconnect();
+      socket.connect();
       res = await fetch(`${import.meta.env.VITE_API_URL}${path}`, {
         credentials: "include",
         ...options,
