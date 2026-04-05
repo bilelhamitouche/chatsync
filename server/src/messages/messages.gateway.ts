@@ -40,7 +40,6 @@ export class MessagesGateway
   ) {}
 
   handleConnection(client: Socket) {
-    console.log(`Client connected ${client.id}`);
     try {
       const token = client.handshake.headers.cookie
         ?.split(';')
@@ -58,14 +57,12 @@ export class MessagesGateway
 
       client.data.userId = payload.sub;
       this.connectedUsers.set(payload.sub, client.id);
-      console.log('Connected users:', this.connectedUsers);
     } catch {
       client.disconnect();
     }
   }
 
   handleDisconnect(client: Socket) {
-    console.log(`Client disconnected ${client.id}`);
     const userId = client.data.userId;
     if (userId) {
       this.connectedUsers.delete(userId);
@@ -107,13 +104,10 @@ export class MessagesGateway
   ) {
     const user = client.data.user;
     try {
-      console.log('Creating');
       const chat = await this.chatsService.create(data, user.sub);
       chat.members.forEach((member) => {
         if (member.id === user.sub) return;
-        console.log('Looking up member:', member.id);
         const socketId = this.connectedUsers.get(member.id);
-        console.log('Found socketId:', socketId);
         if (socketId) {
           this.server.to(socketId).emit('chat_created', chat);
         }
@@ -123,7 +117,6 @@ export class MessagesGateway
         chat,
       };
     } catch (error) {
-      console.error(error);
       return {
         error: 'Failed to create chat',
       };
@@ -138,7 +131,6 @@ export class MessagesGateway
   ) {
     const user = client.data.user;
     try {
-      console.log('Editing');
       const updatedChat = await this.chatsService.update(
         updateChatDto.chatId,
         updateChatDto,
@@ -173,7 +165,6 @@ export class MessagesGateway
   ) {
     const user = client.data.user;
     try {
-      console.log('Leaving');
       await this.chatsService.leaveChat(user.sub, chatId);
       const members = await this.chatsService.findMembersByChatId(chatId);
       members.forEach((member) => {
@@ -202,7 +193,6 @@ export class MessagesGateway
   ) {
     const user = client.data.user;
     try {
-      console.log('Deleting');
       const members = await this.chatsService.findMembersByChatId(chatId);
       await this.chatsService.remove(chatId);
       members.forEach((member) => {
