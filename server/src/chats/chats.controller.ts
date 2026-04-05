@@ -63,6 +63,13 @@ export class ChatsController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Get(':id/members')
+  @HttpCode(HttpStatus.OK)
+  async findChatMembers(@Param('id') id: string) {
+    return this.chatsService.findMembersByChatId(id);
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Patch(':id')
   @HttpCode(HttpStatus.OK)
   async update(@Param('id') id: string, @Body() updateChatDto: UpdateChatDto) {
