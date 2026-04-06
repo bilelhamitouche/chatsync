@@ -1,16 +1,16 @@
 import { currentUserOptions } from "@/api/queries/auth";
+import { getChatMembersOptions } from "@/api/queries/chats";
 import { getChatMessagesOptions } from "@/api/queries/messages";
+import ChatNavbar from "@/components/chat-navbar";
 import MessageForm from "@/components/message-form";
 import MessageList from "@/components/message-list";
-import { useSidebar } from "@/context/sidebar-context";
 import { queryClient } from "@/lib/router";
 import { socket } from "@/lib/socket";
 import type { Message } from "@/lib/types";
-import { Flex, Grid, IconButton } from "@chakra-ui/react";
+import { Grid, Spinner } from "@chakra-ui/react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { Suspense, useEffect } from "react";
-import { LuMenu } from "react-icons/lu";
 
 export const Route = createFileRoute("/__authLayout/chats/$chatId/")({
   component: RouteComponent,
@@ -18,11 +18,13 @@ export const Route = createFileRoute("/__authLayout/chats/$chatId/")({
     await context.queryClient.ensureQueryData(
       getChatMessagesOptions(params.chatId),
     );
+    await context.queryClient.ensureQueryData(
+      getChatMembersOptions(params.chatId),
+    );
   },
 });
 
 function RouteComponent() {
-  const { onOpen } = useSidebar();
   const params = Route.useParams();
   const { data: currentUser } = useSuspenseQuery(currentUserOptions());
   useEffect(() => {
@@ -51,20 +53,15 @@ function RouteComponent() {
   }, [params.chatId]);
   return (
     <Grid
-      templateRows="1fr auto"
-      p="4"
+      templateRows="auto 1fr auto"
       w="full"
       h="dvh"
       minW="0"
       minH="0"
       overflow="hidden"
     >
-      <Flex display={{ base: "flex", md: "none" }} p="2">
-        <IconButton variant="ghost" onClick={onOpen}>
-          <LuMenu />
-        </IconButton>
-      </Flex>
-      <Suspense fallback={<div>Loading messages...</div>}>
+      <ChatNavbar chatId={params.chatId} />
+      <Suspense fallback={<Spinner />}>
         <MessageList currentUserId={currentUser.id} chatId={params.chatId} />
       </Suspense>
       <MessageForm currentUserId={currentUser.id} chatId={params.chatId} />
