@@ -61,7 +61,7 @@ export function MessageFormInner({
     },
   });
   return (
-    <Flex gap="2" w="full" asChild>
+    <Flex gap="2" w="full" asChild p="4">
       <form
         onSubmit={(e) => {
           e.preventDefault();

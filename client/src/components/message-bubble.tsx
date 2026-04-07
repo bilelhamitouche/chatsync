@@ -1,48 +1,66 @@
 import type { Message } from "@/lib/types";
-import { Box, Image, Text } from "@chakra-ui/react";
+import { Avatar, Box, Flex, Image, Stack, Text } from "@chakra-ui/react";
 
 interface MessageBubbleProps {
   message: Message;
-  currentUserId: string;
+  isOwn: boolean;
+  groupedWithPrev: boolean;
+  groupedWithNext: boolean;
 }
 
 export default function MessageBubble({
   message,
-  currentUserId,
+  isOwn,
+  groupedWithPrev,
+  groupedWithNext,
 }: MessageBubbleProps) {
   return (
-    <Box
-      alignSelf={message.senderId === currentUserId ? "flex-end" : "flex-start"}
-    >
-      <Box
-        borderRadius="md"
-        px="4"
-        py="3"
-        w="fit-content"
-        maxW="md"
-        textWrap="wrap"
-        textWrapMode="wrap"
-        textWrapStyle="pretty"
-        bg={message.senderId === currentUserId ? "blue.solid" : "gray.200"}
-        color={message.senderId === currentUserId ? "bg" : "fg"}
+    <Stack mt={!groupedWithPrev ? 4 : 0.5}>
+      <Flex
+        alignItems="center"
+        flexDirection={isOwn ? "row-reverse" : "row"}
+        gap="2"
       >
-        <Box spaceY="4">
-          {message.imageUrl ? (
-            <Image
-              src={message.imageUrl as string}
-              alt="image content"
-              maxW="300px"
-              maxH="400px"
-              objectFit="contain"
-              borderRadius="md"
-            />
-          ) : null}
-          {message.content ? <Text>{message.content}</Text> : null}
+        {!groupedWithNext && (
+          <Avatar.Root size="sm">
+            <Avatar.Image src={message.senderAvatar as string} />
+            <Avatar.Fallback name={message.senderName} />
+          </Avatar.Root>
+        )}
+        <Box
+          borderTopRightRadius={!isOwn && !groupedWithPrev ? "lg" : "none"}
+          borderTopLeftRadius={isOwn && !groupedWithPrev ? "lg" : "none"}
+          borderBottomRightRadius={!isOwn && !groupedWithNext ? "lg" : "none"}
+          borderBottomLeftRadius={isOwn && !groupedWithNext ? "lg" : "none"}
+          px="3"
+          py="2"
+          mr={isOwn && groupedWithNext ? 11 : 0}
+          ml={!isOwn && groupedWithNext ? 11 : 0}
+          w="fit-content"
+          maxW="md"
+          textWrap="wrap"
+          textWrapMode="wrap"
+          textWrapStyle="pretty"
+          bg={isOwn ? "blue.solid" : "gray.200"}
+          color={isOwn ? "bg" : "fg"}
+        >
+          <Box spaceY="4">
+            {message.imageUrl ? (
+              <Image
+                src={message.imageUrl as string}
+                alt="image content"
+                maxW="300px"
+                maxH="400px"
+                objectFit="contain"
+                borderRadius="md"
+              />
+            ) : null}
+            {message.content ? (
+              <Text fontSize="sm">{message.content}</Text>
+            ) : null}
+          </Box>
         </Box>
-      </Box>
-      <Text fontSize="xs" color="gray.600">
-        {new Date(message.sentAt).toLocaleDateString()}
-      </Text>
-    </Box>
+      </Flex>
+    </Stack>
   );
 }

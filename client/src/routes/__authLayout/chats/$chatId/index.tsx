@@ -4,13 +4,11 @@ import { getChatMessagesOptions } from "@/api/queries/messages";
 import ChatNavbar from "@/components/chat-navbar";
 import MessageForm from "@/components/message-form";
 import MessageList from "@/components/message-list";
-import { queryClient } from "@/lib/router";
-import { socket } from "@/lib/socket";
-import type { Message } from "@/lib/types";
+import { useChatRoom } from "@/hooks/useChatRoom";
 import { Grid, Spinner } from "@chakra-ui/react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { Suspense, useEffect } from "react";
+import { Suspense } from "react";
 
 export const Route = createFileRoute("/__authLayout/chats/$chatId/")({
   component: RouteComponent,
@@ -27,30 +25,7 @@ export const Route = createFileRoute("/__authLayout/chats/$chatId/")({
 function RouteComponent() {
   const params = Route.useParams();
   const { data: currentUser } = useSuspenseQuery(currentUserOptions());
-  useEffect(() => {
-    if (!socket.connected) {
-      socket.connect();
-    }
-    socket.emit("join_room", params.chatId);
-
-    socket.on("receive_message", (message) => {
-      queryClient.setQueryData(
-        ["messages", params.chatId],
-        (old: Message[]) => {
-          return [...(old ?? []), message];
-        },
-      );
-      queryClient.invalidateQueries({
-        queryKey: ["chats"],
-        refetchType: "all",
-      });
-    });
-
-    return () => {
-      socket.emit("leave_room", params.chatId);
-      socket.off("receive_message");
-    };
-  }, [params.chatId]);
+  useChatRoom(params.chatId);
   return (
     <Grid
       templateRows="auto 1fr auto"
