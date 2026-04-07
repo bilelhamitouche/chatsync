@@ -6,12 +6,15 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import "@fontsource-variable/bricolage-grotesque/standard.css";
 import { queryClient, router } from "./lib/router";
 import { Toaster } from "./components/ui/toaster";
+import { initSocket } from "./lib/socket-manager";
 
 declare module "@tanstack/react-router" {
   interface Register {
     router: typeof router;
   }
 }
+
+initSocket();
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
