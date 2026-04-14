@@ -35,11 +35,15 @@ export class AuthController {
       httpOnly: true,
       secure: this.configService.get('NODE_ENV') === 'production',
       expires: new Date(Date.now() + Number(tokens.expiresAccessToken)),
+      sameSite: 'none',
+      partitioned: true,
     });
     response.cookie('Refresh', tokens.refreshToken, {
       httpOnly: true,
       secure: this.configService.get('NODE_ENV') === 'production',
       expires: new Date(Date.now() + Number(tokens.expiresRefreshToken)),
+      sameSite: 'none',
+      partitioned: true,
     });
   }
 
@@ -54,11 +58,15 @@ export class AuthController {
       httpOnly: true,
       secure: this.configService.get('NODE_ENV') === 'production',
       expires: new Date(Date.now() + Number(tokens.expiresAccessToken)),
+      sameSite: 'none',
+      partitioned: true,
     });
     response.cookie('Refresh', tokens.refreshToken, {
       httpOnly: true,
       secure: this.configService.get('NODE_ENV') === 'production',
       expires: new Date(Date.now() + Number(tokens.expiresRefreshToken)),
+      sameSite: 'none',
+      partitioned: true,
     });
   }
 
@@ -84,11 +92,15 @@ export class AuthController {
       httpOnly: true,
       secure: this.configService.get('NODE_ENV') === 'production',
       expires: new Date(Date.now() + Number(tokens.expiresAccessToken)),
+      sameSite: 'none',
+      partitioned: true,
     });
     response.cookie('Refresh', tokens.refreshToken, {
       httpOnly: true,
       secure: this.configService.get('NODE_ENV') === 'production',
       expires: new Date(Date.now() + Number(tokens.expiresRefreshToken)),
+      sameSite: 'none',
+      partitioned: true,
     });
   }
 
