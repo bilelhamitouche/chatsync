@@ -39,6 +39,7 @@ function Index() {
           <Flex
             flexDirection="column"
             alignItems="start"
+            letterSpacing={-4}
             gap={{ base: 4, md: 8, lg: 12 }}
           >
             <Heading order={1} fontSize={{ base: "4xl", sm: "5xl", lg: "7xl" }}>
@@ -47,7 +48,11 @@ function Index() {
             <Heading order={1} fontSize={{ base: "4xl", sm: "5xl", lg: "7xl" }}>
               Connected.
             </Heading>
-            <Heading order={1} fontSize={{ base: "4xl", sm: "5xl", lg: "7xl" }}>
+            <Heading
+              color="blue.solid"
+              order={1}
+              fontSize={{ base: "4xl", sm: "5xl", lg: "7xl" }}
+            >
               Stay In Sync.
             </Heading>
           </Flex>
