@@ -61,8 +61,10 @@ function Index() {
             ChatSync brings your conversations together — real-time messaging,
             seamless channels, and end-to-end security for teams that move fast.
           </Text>
-          <Button w="fit-content" size="lg">
-            <Text fontSize="md">Start chatting for free</Text>
+          <Button w="fit-content" size="lg" asChild>
+            <Link to="/auth/register">
+              <Text fontSize="md">Start chatting for free</Text>
+            </Link>
           </Button>
         </Flex>
         <Image
