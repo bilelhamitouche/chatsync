@@ -13,7 +13,8 @@ function Index() {
         as="header"
         alignItems="center"
         justify="space-between"
-        p={2}
+        px={4}
+        py={2}
         shadow="sm"
       >
         <LogoImage width="150" />
