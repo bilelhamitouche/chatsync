@@ -101,11 +101,10 @@ VITE_API_URL=http://localhost:8000/api
 ```
 PORT=8000
 DATABASE_URL=postgresql://username:password@localhost:5432/chatsync
-JWT_SECRET=your_jwt_secret_here
-JWT_EXPIRES_IN=15m
-REFRESH_TOKEN_SECRET=your_refresh_token_secret_here
-REFRESH_TOKEN_EXPIRES_IN=7d
-BCRYPT_SALT_ROUNDS=10
+JWT_ACCESS_TOKEN_SECRET=your_jwt_secret_here
+JWT_ACCESS_TOKEN_EXPIRES_MS=15m
+JWT_REFRESH_TOKEN_SECRET=your_refresh_token_secret_here
+JWT_REFRESH_TOKEN_EXPIRES_MS=7d
 CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
 CLOUDINARY_API_KEY=your_cloudinary_api_key
 CLOUDINARY_API_SECRET=your_cloudinary_api_secret
@@ -258,4 +257,3 @@ This project is licensed under the UNLICENSED license - see server/package.json 
 - [Tanstack Query](https://tanstack.com/query) - Data fetching and state management
 - [Nest.js](https://nestjs.com) - The progressive Nodejs framework for building scalable applications
 - [Socket.io](https://socket.io) - Bidirectional and low-latency communication for every platform
-
