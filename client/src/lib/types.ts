@@ -11,7 +11,6 @@ export interface Member {
   email: string;
   avatar: string | null;
   role: "Admin" | "User";
-  refreshToken: string | null;
   isAdmin: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -23,7 +22,6 @@ export interface User {
   email: string;
   avatar: string | null;
   role: "Admin" | "User";
-  refreshToken: string | null;
   password: string;
   createdAt: Date;
   updatedAt: Date;

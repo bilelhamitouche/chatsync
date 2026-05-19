@@ -1,5 +1,5 @@
 import type { User } from "@/lib/types";
-import { apiFetch } from "@/utils/apiFetch";
+//import { apiFetch } from "@/utils/apiFetch";
 import { queryOptions } from "@tanstack/react-query";
 
 export const currentUserOptions = () =>
