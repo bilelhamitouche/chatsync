@@ -17,7 +17,7 @@ export default function MessageBubble({
   return (
     <Stack mt={!groupedWithPrev ? 4 : 0.5}>
       <Flex
-        alignItems="center"
+        alignItems="start"
         flexDirection={isOwn ? "row-reverse" : "row"}
         gap="2"
       >
