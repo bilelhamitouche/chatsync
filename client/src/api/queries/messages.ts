@@ -5,8 +5,8 @@ import { queryOptions } from "@tanstack/react-query";
 export const getChatMessagesOptions = (chatId: string) =>
   queryOptions({
     queryKey: ["messages", chatId],
-    queryFn: async () => {
+    queryFn: async (): Promise<Message[]> => {
       const messages = await apiFetch(`/api/chats/${chatId}/messages`);
-      return messages as Message[];
+      return messages;
     },
   });

@@ -5,17 +5,17 @@ import { queryOptions } from "@tanstack/react-query";
 export const getChatsOptions = () =>
   queryOptions({
     queryKey: ["chats"],
-    queryFn: async () => {
+    queryFn: async (): Promise<Chat[]> => {
       const chats = await apiFetch("/api/chats");
-      return chats as Chat[];
+      return chats;
     },
   });
 
 export const getChatMembersOptions = (chatId: string) =>
   queryOptions({
     queryKey: ["members", chatId],
-    queryFn: async () => {
+    queryFn: async (): Promise<Member[]> => {
       const members = await apiFetch(`/api/chats/${chatId}/members`);
-      return members as Member[];
+      return members;
     },
   });

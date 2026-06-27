@@ -5,8 +5,8 @@ import { queryOptions } from "@tanstack/react-query";
 export const currentUserOptions = () =>
   queryOptions({
     queryKey: ["currentuser"],
-    queryFn: async () => {
+    queryFn: async (): Promise<User> => {
       const user = await apiFetch("/api/auth/me");
-      return user as User;
+      return user;
     },
   });

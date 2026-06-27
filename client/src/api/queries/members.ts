@@ -5,8 +5,8 @@ import { queryOptions } from "@tanstack/react-query";
 export const membersQueryOptions = () =>
   queryOptions({
     queryKey: ["members"],
-    queryFn: async () => {
+    queryFn: async (): Promise<Member[]> => {
       const members = await apiFetch("/api/users/members");
-      return members as Member[];
+      return members;
     },
   });
